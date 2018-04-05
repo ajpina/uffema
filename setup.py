@@ -41,10 +41,10 @@ setup(name='uffema',
       author_email='a.pina-ortega@ieee.org',
       license='Apache',
       packages=['uffema'],
-#      install_requires=[
-#          'json',
+      install_requires=[
+          'numpy',
 #          'getopt',
 #          'logging',
-#      ],
+      ],
       include_package_data=True,
       zip_safe=False)

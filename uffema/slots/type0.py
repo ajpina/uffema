@@ -17,30 +17,49 @@
 # limitations under the License.
 # ==========================================================================
 
+"""
+    Class for slots of type 0
+"""
+
+# ==========================================================================
+# Program:   surface_permanent_magnet.py
+# Author:    ajpina
+# Date:      12/23/16
+# Version:   0.1.1
+#
+# Revision History:
+#      Date     Version    Author      Description
+#  - 12/23/16:  0.1.1      ajpina      Defines mandatory methods and properties
+#
+# ==========================================================================
+
 __author__ = 'ajpina'
 
 from uffema.slots import Slot
 
+
 class Type0(Slot):
 
-    def __init__(self, h0 = 1.5e-3, h1 = 1.5e-3, h2= 12e-3, h3= 1e-3,
-                 w0 = 2.3e-3, w1 = 17.9e-3, w2 = 17.9e-3, SOp = 0, Sp = 0):
-        self._h0 = h0
-        self._h1 = h1
-        self._h2 = h2
-        self._h3 = h3
-        self._w0 = w0
-        self._w1 = w1
-        self._w2 = w2
-        self._SOp = SOp
-        self._Sp = Sp
+    def __init__(self, slot_settings):
+        self._h0 = slot_settings['h0']
+        self._h1 = slot_settings['h1']
+        self._h2 = slot_settings['h2']
+        self._h3 = slot_settings['h3']
+        self._w0 = slot_settings['w0']
+        self._w1 = slot_settings['w1']
+        self._w2 = slot_settings['w2']
+        self._SOp = slot_settings['SOpos']
+        self._Sp = slot_settings['Spos']
         # It is assumed an insulation liner of 0.5mm thickness
         self._lt = 0.5e-3
 
     def get_slot_center(self):
         return self._h0 + self._h1 + (2.0/3.0)*self._h2
 
-    def get_slot_type(self):
+    def get_type(self):
+        return 0
+
+    def get_area(self):
         return 0
 
     def get_slot_total_height(self):

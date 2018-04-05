@@ -26,23 +26,19 @@ from winding import Winding
 
 
 class Concentrated(Winding):
-    def __init__(self,  phases=3, layers=2, conn='wye', C=[],
-                 mat = Material(), series=1, parallel=1, coilTurns=10, wih=1,
-                 condDiam=1e-3, coilPitch=1,
-                 Ns=12, slot=Type0(), iSr=22.95e-3, Sl=30e-3):
-        lsw = Sl
-        slotCenter = slot.get_slot_center()
-        lew = (PI ** 2) * coilPitch * (2.0 / Ns) * (iSr + slotCenter)
-        Winding.__init__( self, phases, layers, conn, coilTurns*C, mat, series,
-                          parallel, coilTurns, wih, condDiam, coilPitch,
-                          lsw, lew, slot)
+    def __init__(self, winding_settings, Ns):
+        super(Concentrated, self).__init__(winding_settings, Ns)
         # For right-left coil sides, there is phase separator in
         # between (or air), it is assumed 1mm
         self._ph_sep = 1e-3
         # As for end winding length before bending it is assumed 1mm
         self._EWl_bb = 1e-3
 
+    def set_active_length(self, lsw):
+        super(Concentrated, self).set_active_length(lsw)
 
+    def set_end_winding_length(self, Ns, iSr, slotCenter):
+        self._EWl = (PI ** 2) * self._Cpitch * (2.0 / Ns) * (iSr + slotCenter)
 
     def turns_density(self, m=3, Ns=12, psi=np.linspace(0, 2*PI, 360)):
         """Get turns density for non-overlaping side-by-side coils

@@ -17,27 +17,54 @@
 # limitations under the License.
 # ==========================================================================
 
-class Winding:
+import abc
+import numpy as np
 
-    def __init__(self, phases, layers, conn, C,
-                 mat, series, parallel, coilTurns, wih,
-                 condDiam, coilPitch, lsw, lew, slot):
-        self._phases = phases
-        self._layers = layers
-        self._conn = conn
-        self._C = C
-        self._mat = mat
-        self._Cseries = series
-        self._Cparallel = parallel
-        self._Cturns = coilTurns
-        self._wih = wih
-        self._CondDiam = condDiam
-        self._Cpitch = coilPitch
-        self._EWl = lew
+from uffema.misc import *
+
+
+class Winding(object):
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(self, winding_settings, Ns):
+        self._phases = winding_settings['NoPhases']
+        self._layers = winding_settings['Layers']
+        self._conn = winding_settings['Conn']
+        self._C = np.zeros((self._phases * self._layers, Ns), dtype=int)
+        row = 0
+        for la in range(0, self._layers):
+            for ph in range(0, self._phases):
+                for ns in  range(0, Ns):
+                    self._C[row, ns] = winding_settings['CM'][LAYERS[la]][ns][PHASES[ph]]
+                row += 1
+        #self._mat = mat
+        self._Cseries = winding_settings['Cseries']
+        self._Cparallel = winding_settings['Cparallel']
+        self._Cturns = winding_settings['Cturns']
+        self._wih = winding_settings['wih']
+        self._CondDiam = winding_settings['condDiam']
+        self._Cpitch = winding_settings['Cpitch']
+        self._SWl = 0
+        self._EWl = 0
+
+    @abc.abstractmethod
+    def set_active_length(self, lsw):
         self._SWl = lsw
-        self._slot = slot
+
+    @abc.abstractmethod
+    def set_end_winding_length(self, Ns, iSr, slotCenter):
+        pass
 
     @staticmethod
-    def build_winding(winding_settings):
-        winding_instance = ''
+    def create(winding_settings, Ns):
+        winding_type = winding_settings['type']
+        if winding_type == 'concentrated':
+            from uffema.windings import Concentrated
+            winding_instance = Concentrated(winding_settings, Ns)
+        elif winding_type == 'distributed':
+            from uffema.windings import Concentrated
+            winding_instance = Concentrated(winding_settings, Ns)
+        else:
+            from uffema.windings import Concentrated
+            winding_instance = Concentrated(winding_settings, Ns)
         return winding_instance

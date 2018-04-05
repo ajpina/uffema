@@ -124,7 +124,8 @@
           "resistivity" : 1.724e-8
         },
         "Layers" : 2,
-        "Type" : "wye",
+        "type" : "concentrated",
+        "Conn" : "wye",
         "NoPhases" : 3,
         "Cseries" : 1,
         "Cparallel" : 3,

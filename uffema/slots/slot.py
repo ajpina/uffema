@@ -35,16 +35,37 @@
 
 __author__ = 'ajpina'
 
+import abc
+
 
 class Slot(object):
-    def __init__(self, slots_settings):
+    __metaclass__ = abc.ABCMeta
+
+    def __init__(self, slot_settings):
         pass
 
     @staticmethod
-    def build_slots(slots_settings):
-        slot_instance = ''
+    def create(slots_settings, slot_type='type0'):
+        if slot_type == 'type0':
+            from uffema.slots import Type0
+            slot_instance = Type0(slots_settings)
+        elif slot_type == 'type1':
+            from uffema.slots import Type0
+            slot_instance = Type0(slots_settings)
+        else:
+            from uffema.slots import Type0
+            slot_instance = Type0(slots_settings)
         return slot_instance
 
-    def get_slot_type(self):
-        return
+    @abc.abstractmethod
+    def get_type(self):
+        return 'Should never see this'
+
+    @abc.abstractmethod
+    def get_area(self):
+        return 'Should never see this'
+
+    @abc.abstractmethod
+    def get_slot_center(self):
+        return 'Should never see this'
 

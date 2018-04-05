@@ -18,7 +18,7 @@
 # ==========================================================================
 
 """
-    Abstract base class for permanent magnet synchronous motors of the type
+    Class for permanent magnet synchronous motors of the type
     surface-mounted permanent magnets
 """
 
@@ -92,7 +92,7 @@ class SurfacePermanentMagnet(PermanentMagnet):
         super(SurfacePermanentMagnet, self).__init__(machine_settings)
         self._type = self._type + 'SurfacePermanentMagnet'
         stator_settings = machine_settings['stator']
-        self._stator = Stator.build_stator(stator_settings)
+        self._stator = Stator.create(stator_settings)
 
 
 

@@ -17,27 +17,50 @@
 # limitations under the License.
 # ==========================================================================
 
+"""
+    Base class for stators.
+"""
+
+# ==========================================================================
+# Program:   stator.py
+# Author:    ajpina
+# Date:      12/23/16
+# Version:   0.1.1
+#
+# Revision History:
+#      Date     Version    Author      Description
+#  - 12/23/16:  0.1.1      ajpina      Defines mandatory methods and properties
+#
+# ==========================================================================
+
 __author__ = 'ajpina'
+
+import abc
 
 from uffema.misc import *
 from uffema.slots import Slot
 from uffema.windings import Winding
 
 
-class Stator:
+class Stator(object):
+    __metaclass__ = abc.ABCMeta
 
     def __init__(self, stator_settings):
         self._Ns = stator_settings['Ns']
         self._iSr = stator_settings['iSr']
         self._oSr = stator_settings['oSr']
         self._Sl = stator_settings['Sl']
-        slots_settings = stator_settings['slots']
-        self._slots = Slot.build_slots(slots_settings)
+        self._slots = []
+        for i, slot_settings in enumerate(stator_settings['slots']['dimension']):
+            self._slots.insert(i, Slot.create(slot_settings, stator_settings['slots']['type']))
         winding_settings = stator_settings['winding']
-        self._winding = Winding.build_winding(winding_settings)
+        self._winding = Winding.create(winding_settings, self._Ns)
+        self._winding.set_active_length(self._Sl)
+        slotCenter = self._slots[0].get_slot_center()
+        self._winding.set_end_winding_length(self._Ns, self._iSr, slotCenter)
 
     @staticmethod
-    def build_stator(stator_settings):
+    def create(stator_settings):
         stator_type = stator_settings['type']
         if stator_type == 'StandardOuter':
             from uffema.stators import StandardOuterStator
@@ -49,10 +72,6 @@ class Stator:
             from uffema.stators import StandardOuterStator
             stator_instance = StandardOuterStator(stator_settings)
         return stator_instance
-
-
-
-
 
     def get_resistances(self):
         Clength = 2*(self._winding._SWl + self._winding._EWl)

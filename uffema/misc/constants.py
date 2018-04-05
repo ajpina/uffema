@@ -43,6 +43,8 @@ K_QD = (2.0 / 3.0) * np.array(([[np.sin(THETA_e_DEG * DEG2RAD),
                                 np.cos((THETA_e_DEG - 120) * DEG2RAD),
                                 np.cos((THETA_e_DEG + 120) * DEG2RAD)]]))
 
+LAYERS = ['CM1', 'CM2', 'CM3', 'CM4']
+PHASES = ['A', 'B', 'C', 'D', 'E', 'F']
 
 def LCM(a,b):
     return abs(a * b) / fractions.gcd(a, b) if a and b else 0

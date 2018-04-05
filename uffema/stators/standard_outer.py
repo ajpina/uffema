@@ -17,11 +17,23 @@
 # limitations under the License.
 # ==========================================================================
 
-__author__ = 'ajpina'
+"""
+    Class for standard outer stator
+"""
 
-import numpy as np
-from uffema.slots import Type0
-from uffema.windings import Concentrated
+# ==========================================================================
+# Program:   standard_outer.py
+# Author:    ajpina
+# Date:      12/23/16
+# Version:   0.1.1
+#
+# Revision History:
+#      Date     Version    Author      Description
+#  - 12/23/16:  0.1.1      ajpina      Defines mandatory methods and properties
+#
+# ==========================================================================
+
+__author__ = 'ajpina'
 
 from uffema.stators import Stator
 
@@ -29,18 +41,6 @@ from uffema.stators import Stator
 class StandardOuterStator(Stator):
 
     def __init__(self, stator_settings):
-        Ns = 12
-        slots = []
-        iSr = 22.95e-3
-        oSr = 50.0e-3
-        Sl = 30e-3
-        winding = Concentrated()
-        if not slots:
-            for i in range(0, Ns):
-                slots.insert(i, Type0())
-                slots[i]._SOp = (2*np.pi/Ns)*i + np.pi/Ns
-                slots[i]._Sp = (2*np.pi/Ns)*i + np.pi/Ns
-
-        Stator.__init__(self, stator_settings)
+        super(StandardOuterStator, self).__init__(stator_settings)
 
 
