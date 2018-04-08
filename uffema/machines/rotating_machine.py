@@ -37,6 +37,8 @@ __author__ = 'ajpina'
 
 import abc
 
+from uffema.stators import Stator
+from uffema.rotors import Rotor
 
 class RotatingMachine(object):
     __metaclass__ = abc.ABCMeta
@@ -83,6 +85,10 @@ class RotatingMachine(object):
 
     def __init__(self, machine_settings):
         self.type = 'RotatingMachine::'
+        stator_settings = machine_settings['stator']
+        self.stator = Stator.create(stator_settings)
+        rotor_settings = machine_settings['rotor']
+        self.rotor = Rotor.create(rotor_settings)
 
     @staticmethod
     def create(machine_settings):

@@ -38,61 +38,56 @@ __author__ = 'ajpina'
 
 
 from uffema.machines import PermanentMagnet
-from uffema.stators import Stator
 
 
 class SurfacePermanentMagnet(PermanentMagnet):
-    _stator = ''
-    _rotor = ''
-    _flux = 'Radial'
-    _mode = 'Motor'
-    _type = 'SurfacePermanentMagnet'
 
     @property
     def stator(self):
         return self._stator
 
     @stator.setter
-    def stator(self, new_stator):
-        self._stator = new_stator
+    def stator(self, value):
+        self._stator = value
 
     @property
     def rotor(self):
         return self._rotor
 
     @rotor.setter
-    def rotor(self, new_rotor):
-        self._rotor = new_rotor
+    def rotor(self, value):
+        self._rotor = value
 
     @property
     def flux(self):
         return self._flux
 
     @flux.setter
-    def flux(self, new_flux):
-        self._flux = new_flux
+    def flux(self, value):
+        self._flux = value
 
     @property
     def mode(self):
         return self._mode
 
     @mode.setter
-    def mode(self, new_mode):
-        self._mode = new_mode
+    def mode(self, value):
+        self._mode = value
 
     @property
     def type(self):
         return self._type
 
     @type.setter
-    def type(self, new_type):
-        self._type = new_type
+    def type(self, value):
+        self._type = value
 
     def __init__(self, machine_settings):
         super(SurfacePermanentMagnet, self).__init__(machine_settings)
-        self._type = self._type + 'SurfacePermanentMagnet'
-        stator_settings = machine_settings['stator']
-        self._stator = Stator.create(stator_settings)
+        self.type = self.type + 'SurfacePermanentMagnet'
+        self.mode = 'Motor'
+        self.flux = 'Radial'
+
 
 
 

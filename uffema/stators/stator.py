@@ -45,19 +45,76 @@ from uffema.windings import Winding
 class Stator(object):
     __metaclass__ = abc.ABCMeta
 
+    @property
+    def slots_number(self):
+        return self._slots_number
+
+    @slots_number.setter
+    def slots_number(self, value):
+        self._slots_number = value
+
+    @property
+    def inner_radius(self):
+        return self._inner_radius
+
+    @inner_radius.setter
+    def inner_radius(self, value):
+        self._inner_radius = value
+
+    @property
+    def outer_radius(self):
+        return self._outer_radius
+
+    @outer_radius.setter
+    def outer_radius(self, value):
+        self._outer_radius = value
+
+    @property
+    def stack_length(self):
+        return self._stack_length
+
+    @stack_length.setter
+    def stack_length(self, value):
+        self._stack_length = value
+
+    @property
+    def slots(self):
+        return self._slots
+
+    @slots.setter
+    def slots(self, value):
+        self._slots = value
+
+    @property
+    def winding(self):
+        return self._winding
+
+    @winding.setter
+    def winding(self, value):
+        self._winding = value
+
+    @abc.abstractproperty
+    def type(self):
+        return 'Should never see this'
+
+    @type.setter
+    def type(self, new_type):
+        return
+
     def __init__(self, stator_settings):
-        self._Ns = stator_settings['Ns']
-        self._iSr = stator_settings['iSr']
-        self._oSr = stator_settings['oSr']
-        self._Sl = stator_settings['Sl']
-        self._slots = []
+        self.slots_number = stator_settings['Ns']
+        self.inner_radius = stator_settings['iSr']
+        self.outer_radius = stator_settings['oSr']
+        self.stack_length = stator_settings['Sl']
+        self.slots = []
         for i, slot_settings in enumerate(stator_settings['slots']['dimension']):
-            self._slots.insert(i, Slot.create(slot_settings, stator_settings['slots']['type']))
+            self.slots.insert(i, Slot.create(slot_settings, stator_settings['slots']['type']))
         winding_settings = stator_settings['winding']
-        self._winding = Winding.create(winding_settings, self._Ns)
-        self._winding.set_active_length(self._Sl)
-        slotCenter = self._slots[0].get_slot_center()
-        self._winding.set_end_winding_length(self._Ns, self._iSr, slotCenter)
+        self.winding = Winding.create(winding_settings, self.slots_number)
+        self.winding.set_active_length(self.stack_length)
+        slotCenter = self.slots[0].get_slot_center()
+        self.winding.set_end_winding_length(self.slots_number, self.inner_radius, slotCenter)
+        self.type = 'Stator::'
 
     @staticmethod
     def create(stator_settings):

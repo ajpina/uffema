@@ -19,25 +19,54 @@
 
 __author__ = 'ajpina'
 
+import abc
+
 from uffema.materials import Material
+from uffema.misc.constants import *
 
-from uffema.constants import *
 
+class Magnet(object):
+    __metaclass__ = abc.ABCMeta
 
-class Magnet:
-    def __init__(self, Ml = 2.75e-3, Mw = 12e-3, Mps = 1.0,
-                 P = 8, iMr = 19.45e-3, mat = Material(), magType = 0,
-                 delta = 0.0):
-        self._Ml = Ml
-        self._Mw = Mw
-        self._Mps = Mps
-        self._iMr = iMr
-        self._oMr = iMr + Mps*Ml
-        self._Miaa = (P/PI)*np.arcsin(Mw/(2.0*self._iMr))
-        self._Moaa = (P/PI)*np.arcsin(Mw/(2.0*self._oMr))
-        self._alpha_p_v = ((self._Miaa+self._Moaa)/2.0)
-        self._delta_v = delta*DEG2RAD
-        self._mat = mat
-        self._M = (mat._Br/MU0)
-        self._magType = magType
+    @property
+    def material(self):
+        return self._material
+
+    @material.setter
+    def material(self, value):
+        self._material = value
+
+    @property
+    def magnetisation(self):
+        return self._magnetisation
+
+    @magnetisation.setter
+    def magnetisation(self, value):
+        self._magnetisation = value
+
+    @abc.abstractproperty
+    def type(self):
+        return 'Should never see this'
+
+    @type.setter
+    def type(self, new_type):
+        return
+
+    def __init__(self, magnets_settings, magnetisation, material):
+        self.material = material
+        self.magnetisation = magnetisation
+        self.type = 'Magnet::'
+
+    @staticmethod
+    def create(magnets_settings, magnet_type='Arc', magnetisation='Paralell', material=None ):
+        if magnet_type == 'Arc':
+            from uffema.magnets import ArcMagnet
+            magnet_instance = ArcMagnet(magnets_settings, magnetisation, material)
+        elif magnet_type == 'Rectangular':
+            from uffema.magnets import RectangularMagnet
+            magnet_instance = RectangularMagnet(magnets_settings, magnetisation, material)
+        else:
+            from uffema.magnets import ArcMagnet
+            magnet_instance = ArcMagnet(magnets_settings, magnetisation, material)
+        return magnet_instance
 

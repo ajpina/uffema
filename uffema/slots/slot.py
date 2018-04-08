@@ -41,8 +41,16 @@ import abc
 class Slot(object):
     __metaclass__ = abc.ABCMeta
 
+    @abc.abstractproperty
+    def type(self):
+        return 'Should never see this'
+
+    @type.setter
+    def type(self, new_type):
+        return
+
     def __init__(self, slot_settings):
-        pass
+        self.type = 'Slot::'
 
     @staticmethod
     def create(slots_settings, slot_type='type0'):
@@ -57,9 +65,6 @@ class Slot(object):
             slot_instance = Type0(slots_settings)
         return slot_instance
 
-    @abc.abstractmethod
-    def get_type(self):
-        return 'Should never see this'
 
     @abc.abstractmethod
     def get_area(self):

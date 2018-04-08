@@ -26,6 +26,14 @@ from winding import Winding
 
 
 class Concentrated(Winding):
+    @property
+    def type(self):
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        self._type = value
+
     def __init__(self, winding_settings, Ns):
         super(Concentrated, self).__init__(winding_settings, Ns)
         # For right-left coil sides, there is phase separator in
@@ -33,12 +41,13 @@ class Concentrated(Winding):
         self._ph_sep = 1e-3
         # As for end winding length before bending it is assumed 1mm
         self._EWl_bb = 1e-3
+        self.type = self.type + 'Concentrated'
 
     def set_active_length(self, lsw):
         super(Concentrated, self).set_active_length(lsw)
 
     def set_end_winding_length(self, Ns, iSr, slotCenter):
-        self._EWl = (PI ** 2) * self._Cpitch * (2.0 / Ns) * (iSr + slotCenter)
+        self.end_winding_length = (PI ** 2) * self.coil_pitch * (2.0 / Ns) * (iSr + slotCenter)
 
     def turns_density(self, m=3, Ns=12, psi=np.linspace(0, 2*PI, 360)):
         """Get turns density for non-overlaping side-by-side coils
@@ -58,9 +67,9 @@ class Concentrated(Winding):
         """
         td = np.zeros((m, Ns+1))
         for i in range(0,Ns):
-            td[0,i+1] = td[0,i] + self._C[0,i] + self._C[3,i]
-            td[1,i+1] = td[1,i] + self._C[1,i] + self._C[4,i]
-            td[2,i+1] = td[2,i] + self._C[2,i] + self._C[5,i]
+            td[0,i+1] = td[0,i] + self.conn_matrix[0,i] + self.conn_matrix[3,i]
+            td[1,i+1] = td[1,i] + self.conn_matrix[1,i] + self.conn_matrix[4,i]
+            td[2,i+1] = td[2,i] + self.conn_matrix[2,i] + self.conn_matrix[5,i]
         td_unshift_intpl = si.interp1d(range(0, Ns+1), td , kind='nearest')
         td_unshift = td_unshift_intpl(np.linspace(0, Ns, len(psi)))
         td_shift = np.zeros_like(td_unshift)
@@ -118,7 +127,7 @@ class Concentrated(Winding):
         Returns:
             wh:         Winding harmonics
         """
-        td = (self.turns_density(m, Ns, psi))/self._Cturns
+        td = (self.turns_density(m, Ns, psi))/self.turns_coil
         N = len(td[0])
         N_half = (np.rint(N/2.0)).astype(int)
         td_fft = fft(td[0])

@@ -17,38 +17,12 @@
 # limitations under the License.
 # ==========================================================================
 
-"""
-    Class for standard outer stator
-"""
-
-# ==========================================================================
-# Program:   standard_outer.py
-# Author:    ajpina
-# Date:      12/23/16
-# Version:   0.1.1
-#
-# Revision History:
-#      Date     Version    Author      Description
-#  - 12/23/16:  0.1.1      ajpina      Defines mandatory methods and properties
-#
-# ==========================================================================
-
 __author__ = 'ajpina'
 
-from uffema.stators import Stator
+class PMPocket:
+    def __init__(self):
+        pass
 
-
-class StandardOuterStator(Stator):
-    @property
-    def type(self):
-        return self._type
-
-    @type.setter
-    def type(self, value):
-        self._type = value
-
-    def __init__(self, stator_settings):
-        super(StandardOuterStator, self).__init__(stator_settings)
-        self.type = self.type + 'StandardOuter'
-
-
+    @staticmethod
+    def create(pocket_settings):
+        pass

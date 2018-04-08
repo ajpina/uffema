@@ -26,30 +26,136 @@ from uffema.misc import *
 class Winding(object):
     __metaclass__ = abc.ABCMeta
 
+    @property
+    def phases(self):
+        return self._phases
+
+    @phases.setter
+    def phases(self, value):
+        self._phases = value
+
+    @property
+    def layers(self):
+        return self._layers
+
+    @layers.setter
+    def layers(self, value):
+        self._layers = value
+
+    @property
+    def conn(self):
+        return self._conn
+
+    @conn.setter
+    def conn(self, value):
+        self._conn = value
+
+    @property
+    def conn_matrix(self):
+        return self._conn_matrix
+
+    @conn_matrix.setter
+    def conn_matrix(self, value):
+        self._conn_matrix = value
+
+    @property
+    def coil_series(self):
+        return self._coil_series
+
+    @coil_series.setter
+    def coil_series(self, value):
+        self._coil_series = value
+
+    @property
+    def coil_parallel(self):
+        return self._coil_parallel
+
+    @coil_parallel.setter
+    def coil_parallel(self, value):
+        self._coil_parallel = value
+
+    @property
+    def turns_coil(self):
+        return self._turns_coil
+
+    @turns_coil.setter
+    def turns_coil(self, value):
+        self._turns_coil = value
+
+    @property
+    def wires_in_hand(self):
+        return self._wires_in_hand
+
+    @wires_in_hand.setter
+    def wires_in_hand(self, value):
+        self._wires_in_hand = value
+
+    @property
+    def conductor_diameter(self):
+        return self._conductor_diameter
+
+    @conductor_diameter.setter
+    def conductor_diameter(self, value):
+        self._conductor_diameter = value
+
+    @property
+    def coil_pitch(self):
+        return self._coil_pitch
+
+    @coil_pitch.setter
+    def coil_pitch(self, value):
+        self._coil_pitch = value
+
+    @property
+    def slot_winding_length(self):
+        return self._slot_winding_length
+
+    @slot_winding_length.setter
+    def slot_winding_length(self, value):
+        self._slot_winding_length = value
+
+    @property
+    def end_winding_length(self):
+        return self._end_winding_length
+
+    @end_winding_length.setter
+    def end_winding_length(self, value):
+        self._end_winding_length = value
+
+    @abc.abstractproperty
+    def type(self):
+        return 'Should never see this'
+
+    @type.setter
+    def type(self, new_type):
+        return
+
+
     def __init__(self, winding_settings, Ns):
-        self._phases = winding_settings['NoPhases']
-        self._layers = winding_settings['Layers']
-        self._conn = winding_settings['Conn']
-        self._C = np.zeros((self._phases * self._layers, Ns), dtype=int)
+        self.phases = winding_settings['NoPhases']
+        self.layers = winding_settings['Layers']
+        self.conn = winding_settings['Conn']
+        self.conn_matrix = np.zeros((self.phases * self.layers, Ns), dtype=int)
         row = 0
-        for la in range(0, self._layers):
-            for ph in range(0, self._phases):
+        for la in range(0, self.layers):
+            for ph in range(0, self.phases):
                 for ns in  range(0, Ns):
-                    self._C[row, ns] = winding_settings['CM'][LAYERS[la]][ns][PHASES[ph]]
+                    self.conn_matrix[row, ns] = winding_settings['CM'][LAYERS[la]][ns][PHASES[ph]]
                 row += 1
         #self._mat = mat
-        self._Cseries = winding_settings['Cseries']
-        self._Cparallel = winding_settings['Cparallel']
-        self._Cturns = winding_settings['Cturns']
-        self._wih = winding_settings['wih']
-        self._CondDiam = winding_settings['condDiam']
-        self._Cpitch = winding_settings['Cpitch']
-        self._SWl = 0
-        self._EWl = 0
+        self.coil_series = winding_settings['Cseries']
+        self.coil_parallel = winding_settings['Cparallel']
+        self.turns_coil = winding_settings['Cturns']
+        self.wires_in_hand = winding_settings['wih']
+        self.conductor_diameter = winding_settings['condDiam']
+        self.coil_pitch = winding_settings['Cpitch']
+        self.slot_winding_length = 0
+        self.end_winding_length = 0
+        self.type = 'Winding::'
 
     @abc.abstractmethod
     def set_active_length(self, lsw):
-        self._SWl = lsw
+        self.slot_winding_length = lsw
 
     @abc.abstractmethod
     def set_end_winding_length(self, Ns, iSr, slotCenter):

@@ -44,6 +44,11 @@ def main():
         machine_settings = json.load(msf)
     spm = RotatingMachine.create(machine_settings['machine'])
     print spm.type
+    print spm.stator.type
+    print spm.stator.slots[0].type
+    print spm.stator.winding.type
+    print spm.rotor.type
+    print spm.rotor.magnets[0].type
     return 1
 
 

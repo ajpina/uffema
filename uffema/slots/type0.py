@@ -39,22 +39,111 @@ from uffema.slots import Slot
 
 
 class Type0(Slot):
+    @property
+    def h0(self):
+        return self._h0
+
+    @h0.setter
+    def h0(self, value):
+        self._h0 = value
+
+    @property
+    def h1(self):
+        return self._h1
+
+    @h1.setter
+    def h1(self, value):
+        self._h1 = value
+
+    @property
+    def h2(self):
+        return self._h2
+
+    @h2.setter
+    def h2(self, value):
+        self._h2 = value
+
+    @property
+    def h3(self):
+        return self._h3
+
+    @h3.setter
+    def h3(self, value):
+        self._h3 = value
+
+    @property
+    def w0(self):
+        return self._w0
+
+    @w0.setter
+    def w0(self, value):
+        self._w0 = value
+
+    @property
+    def w1(self):
+        return self._w1
+
+    @w1.setter
+    def w1(self, value):
+        self._w1 = value
+
+    @property
+    def w2(self):
+        return self._w2
+
+    @w2.setter
+    def w2(self, value):
+        self._w2 = value
+
+    @property
+    def so_position(self):
+        return self._so_position
+
+    @so_position.setter
+    def so_position(self, value):
+        self._so_position = value
+
+    @property
+    def s_position(self):
+        return self._s_position
+
+    @s_position.setter
+    def s_position(self, value):
+        self._s_position = value
+
+    @property
+    def liner_thickness(self):
+        return self._liner_thickness
+
+    @liner_thickness.setter
+    def liner_thickness(self, value):
+        self._liner_thickness = value
+
+    @property
+    def type(self):
+        return self._type
+
+    @type.setter
+    def type(self, value):
+        self._type = value
 
     def __init__(self, slot_settings):
-        self._h0 = slot_settings['h0']
-        self._h1 = slot_settings['h1']
-        self._h2 = slot_settings['h2']
-        self._h3 = slot_settings['h3']
-        self._w0 = slot_settings['w0']
-        self._w1 = slot_settings['w1']
-        self._w2 = slot_settings['w2']
-        self._SOp = slot_settings['SOpos']
-        self._Sp = slot_settings['Spos']
+        super(Type0, self).__init__(slot_settings)
+        self.h0 = slot_settings['h0']
+        self.h1 = slot_settings['h1']
+        self.h2 = slot_settings['h2']
+        self.h3 = slot_settings['h3']
+        self.w0 = slot_settings['w0']
+        self.w1 = slot_settings['w1']
+        self.w2 = slot_settings['w2']
+        self.so_position = slot_settings['SOpos']
+        self.s_position = slot_settings['Spos']
         # It is assumed an insulation liner of 0.5mm thickness
-        self._lt = 0.5e-3
+        self.liner_thickness = 0.5e-3
+        self.type = self.type + 'Type0'
 
     def get_slot_center(self):
-        return self._h0 + self._h1 + (2.0/3.0)*self._h2
+        return self.h0 + self.h1 + (2.0/3.0)*self.h2
 
     def get_type(self):
         return 0
@@ -63,4 +152,4 @@ class Type0(Slot):
         return 0
 
     def get_slot_total_height(self):
-        return self._h0 + self._h1 + self._h2 + self._h3
+        return self.h0 + self.h1 + self.h2 + self.h3
