@@ -64,6 +64,9 @@ class Rotor(object):
     def type(self, new_type):
         return
 
+    def get_type(self):
+        return 'Rotor'
+
     def __init__(self, rotor_settings):
         self.pp = rotor_settings['pp']
         self.inner_radius = rotor_settings['iRr']
@@ -74,10 +77,10 @@ class Rotor(object):
     @staticmethod
     def create(rotor_settings):
         stator_type = rotor_settings['type']
-        if stator_type == 'StandardInner':
+        if stator_type == 'standardinner':
             from uffema.rotors import PMStandardInnerRotor
             rotor_instance = PMStandardInnerRotor(rotor_settings)
-        elif stator_type == 'StandardOuter':
+        elif stator_type == 'standardouter':
             from uffema.rotors import PMStandardInnerRotor
             rotor_instance = PMStandardInnerRotor(rotor_settings)
         else:

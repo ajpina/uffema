@@ -130,6 +130,8 @@ class Winding(object):
     def type(self, new_type):
         return
 
+    def get_type(self):
+        return 'Winding'
 
     def __init__(self, winding_settings, Ns):
         self.phases = winding_settings['NoPhases']

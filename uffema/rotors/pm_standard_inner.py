@@ -60,10 +60,13 @@ class PMStandardInnerRotor(Rotor):
     def type(self, value):
         self._type = value
 
+    def get_type(self):
+        return 'PMInner'
+
     def __init__(self, rotor_settings):
         super(PMStandardInnerRotor, self).__init__(rotor_settings)
         self.magnets = []
-        for i, magnet_settings in  enumerate(rotor_settings['magnets']['dimension']):
+        for i, magnet_settings in enumerate(rotor_settings['magnets']['dimension']):
             self.magnets.insert(i, Magnet.create(magnet_settings, rotor_settings['magnets']['type'],
                                                  rotor_settings['magnets']['magnetisation'],
                                                  rotor_settings['magnets']['material']))

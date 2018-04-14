@@ -101,6 +101,9 @@ class Stator(object):
     def type(self, new_type):
         return
 
+    def get_type(self):
+        return 'Stator'
+
     def __init__(self, stator_settings):
         self.slots_number = stator_settings['Ns']
         self.inner_radius = stator_settings['iSr']
@@ -119,10 +122,10 @@ class Stator(object):
     @staticmethod
     def create(stator_settings):
         stator_type = stator_settings['type']
-        if stator_type == 'StandardOuter':
+        if stator_type == 'standardouter':
             from uffema.stators import StandardOuterStator
             stator_instance = StandardOuterStator(stator_settings)
-        elif stator_type == 'StandardInner':
+        elif stator_type == 'standardinner':
             from uffema.stators import StandardOuterStator
             stator_instance = StandardOuterStator(stator_settings)
         else:

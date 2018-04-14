@@ -83,6 +83,9 @@ class PermanentMagnet(Synchronous):
     def type(self, new_type):
         return
 
+    def get_type(self):
+        return 'PermanentMagnet'
+
     def __init__(self, machine_settings):
         super(PermanentMagnet, self).__init__(machine_settings)
         self.type = self.type + 'PermanentMagnet::'

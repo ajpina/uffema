@@ -47,6 +47,9 @@ class RectangularMagnet(Magnet):
     def type(self, value):
         self._type = value
 
+    def get_type(self):
+        return 'Rectangular'
+
     def __init__(self, magnets_settings, magnetisation, material):
         super(RectangularMagnet, self).__init__(magnets_settings, magnetisation, material)
         self.length = magnets_settings['Ml']

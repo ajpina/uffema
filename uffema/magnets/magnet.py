@@ -52,21 +52,24 @@ class Magnet(object):
     def type(self, new_type):
         return
 
-    def __init__(self, magnets_settings, magnetisation, material):
-        self.material = material
+    def get_type(self):
+        return 'Magnet'
+
+    def __init__(self, magnets_settings, magnetisation, material_settings):
+        self.material = Material.create(material_settings)
         self.magnetisation = magnetisation
         self.type = 'Magnet::'
 
     @staticmethod
-    def create(magnets_settings, magnet_type='Arc', magnetisation='Paralell', material=None ):
-        if magnet_type == 'Arc':
+    def create(magnets_settings, magnet_type='arc', magnetisation='paralell', material_settings=None ):
+        if magnet_type == 'arc':
             from uffema.magnets import ArcMagnet
-            magnet_instance = ArcMagnet(magnets_settings, magnetisation, material)
-        elif magnet_type == 'Rectangular':
+            magnet_instance = ArcMagnet(magnets_settings, magnetisation, material_settings)
+        elif magnet_type == 'rectangular':
             from uffema.magnets import RectangularMagnet
-            magnet_instance = RectangularMagnet(magnets_settings, magnetisation, material)
+            magnet_instance = RectangularMagnet(magnets_settings, magnetisation, material_settings)
         else:
             from uffema.magnets import ArcMagnet
-            magnet_instance = ArcMagnet(magnets_settings, magnetisation, material)
+            magnet_instance = ArcMagnet(magnets_settings, magnetisation, material_settings)
         return magnet_instance
 

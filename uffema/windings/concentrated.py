@@ -34,6 +34,9 @@ class Concentrated(Winding):
     def type(self, value):
         self._type = value
 
+    def get_type(self):
+        return 'Concentrated'
+
     def __init__(self, winding_settings, Ns):
         super(Concentrated, self).__init__(winding_settings, Ns)
         # For right-left coil sides, there is phase separator in

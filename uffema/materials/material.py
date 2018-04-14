@@ -18,7 +18,13 @@
 # ==========================================================================
 
 class Material:
-    def __init__(self, Br = 1.21, mur = 1.07, rho = 1.724e-8):
-        self._Br = Br
-        self._mur = mur
-        self._rho = rho
+    def __init__(self, material_settings):
+        self.Br = material_settings['Br']
+        self.mur = material_settings['mur']
+        self.resistivity = material_settings['resistivity']
+        self.BH = material_settings['BHcurve']
+
+    @staticmethod
+    def create(material_settings):
+        material_instance = Material(material_settings)
+        return material_instance

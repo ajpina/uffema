@@ -49,6 +49,9 @@ class Slot(object):
     def type(self, new_type):
         return
 
+    def get_type(self):
+        return 'Slot'
+
     def __init__(self, slot_settings):
         self.type = 'Slot::'
 

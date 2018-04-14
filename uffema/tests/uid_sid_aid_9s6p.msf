@@ -1,8 +1,8 @@
 {
   "machine" : {
-    "type" : "SPM",
+    "type" : "spm",
     "stator" : {
-      "type" : "StandardOuter",
+      "type" : "standardouter",
       "oSr" : 42.5e-3,
       "iSr" : 18.98e-3,
       "Ns" : 9,
@@ -160,14 +160,14 @@
       }
     },
     "rotor" : {
-      "type" : "StandardInner",
+      "type" : "standardinner",
       "oRr" : 15.2e-3,
       "iRr" : 6e-3,
       "pp" : 3,
       "Rl" : 36.5e-3,
       "magnets" : {
-        "type" : "Arc",
-        "magnetisation" : "Parallel",
+        "type" : "arc",
+        "magnetisation" : "parallel",
         "material" : {
            "BHcurve" : null,
            "resistivity" : 1e-6,

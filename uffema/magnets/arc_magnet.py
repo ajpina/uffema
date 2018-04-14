@@ -104,8 +104,11 @@ class ArcMagnet(Magnet):
     def type(self, value):
         self._type = value
 
-    def __init__(self, magnets_settings, magnetisation, material):
-        super(ArcMagnet, self).__init__(magnets_settings, magnetisation, material)
+    def get_type(self):
+        return 'Arc'
+
+    def __init__(self, magnets_settings, magnetisation, material_settings):
+        super(ArcMagnet, self).__init__(magnets_settings, magnetisation, material_settings)
         self.length = magnets_settings['Ml']
         self.width = magnets_settings['Mw']
         self.pole_shaping = magnets_settings['Mps']
@@ -119,7 +122,7 @@ class ArcMagnet(Magnet):
         self.outer_arc_angle = (1.0 / PI) * np.arcsin(self.width / (2.0 * self.outer_radius))
         self.mean_arc_angle = ((self.inner_arc_angle+self.outer_arc_angle)/2.0)
         self.deviation = magnets_settings['delta']*DEG2RAD
-        #self._mat = mat
-        #self._M = (mat._Br/MU0)
-        #self._magType = magType
         self.type = self.type + 'Arc'
+
+
+

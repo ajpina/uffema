@@ -47,6 +47,9 @@ class StandardOuterStator(Stator):
     def type(self, value):
         self._type = value
 
+    def get_type(self):
+        return 'StandardOuter'
+
     def __init__(self, stator_settings):
         super(StandardOuterStator, self).__init__(stator_settings)
         self.type = self.type + 'StandardOuter'

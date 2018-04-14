@@ -146,7 +146,7 @@ class Type0(Slot):
         return self.h0 + self.h1 + (2.0/3.0)*self.h2
 
     def get_type(self):
-        return 0
+        return 'Type0'
 
     def get_area(self):
         return 0
