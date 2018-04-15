@@ -22,7 +22,7 @@ from scipy.fftpack import fft
 from uffema.materials import Material
 from uffema.slots import Type0
 from uffema.misc import *
-from winding import Winding
+from uffema.windings import Winding
 
 
 class Concentrated(Winding):

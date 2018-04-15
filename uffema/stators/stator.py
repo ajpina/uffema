@@ -35,15 +35,14 @@
 
 __author__ = 'ajpina'
 
-import abc
+from abc import ABCMeta, abstractmethod
 
 from uffema.misc import *
 from uffema.slots import Slot
 from uffema.windings import Winding
 
 
-class Stator(object):
-    __metaclass__ = abc.ABCMeta
+class Stator(metaclass=ABCMeta):
 
     @property
     def slots_number(self):
@@ -93,11 +92,13 @@ class Stator(object):
     def winding(self, value):
         self._winding = value
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def type(self):
         return 'Should never see this'
 
     @type.setter
+    @abstractmethod
     def type(self, new_type):
         return
 

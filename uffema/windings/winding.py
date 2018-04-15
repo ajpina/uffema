@@ -17,14 +17,13 @@
 # limitations under the License.
 # ==========================================================================
 
-import abc
+from abc import ABCMeta, abstractmethod
 import numpy as np
 
 from uffema.misc import *
 
 
-class Winding(object):
-    __metaclass__ = abc.ABCMeta
+class Winding(metaclass=ABCMeta):
 
     @property
     def phases(self):
@@ -122,11 +121,13 @@ class Winding(object):
     def end_winding_length(self, value):
         self._end_winding_length = value
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def type(self):
         return 'Should never see this'
 
     @type.setter
+    @abstractmethod
     def type(self, new_type):
         return
 
@@ -155,11 +156,11 @@ class Winding(object):
         self.end_winding_length = 0
         self.type = 'Winding::'
 
-    @abc.abstractmethod
+    @abstractmethod
     def set_active_length(self, lsw):
         self.slot_winding_length = lsw
 
-    @abc.abstractmethod
+    @abstractmethod
     def set_end_winding_length(self, Ns, iSr, slotCenter):
         pass
 

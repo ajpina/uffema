@@ -43,18 +43,18 @@ def main():
     with open('uid_sid_aid_9s6p.msf') as msf:
         machine_settings = json.load(msf)
     spm = RotatingMachine.create(machine_settings['machine'])
-    print spm.type
-    print spm.get_type()
-    print spm.stator.type
-    print spm.stator.get_type()
-    print spm.stator.slots[0].type
-    print spm.stator.slots[0].get_type()
-    print spm.stator.winding.type
-    print spm.stator.winding.get_type()
-    print spm.rotor.type
-    print spm.rotor.get_type()
-    print spm.rotor.magnets[0].type
-    print spm.rotor.magnets[0].get_type()
+    print (spm.type)
+    print (spm.get_type())
+    print (spm.stator.type)
+    print (spm.stator.get_type())
+    print (spm.stator.slots[0].type)
+    print (spm.stator.slots[0].get_type())
+    print (spm.stator.winding.type)
+    print (spm.stator.winding.get_type())
+    print (spm.rotor.type)
+    print (spm.rotor.get_type())
+    print (spm.rotor.magnets[0].type)
+    print (spm.rotor.magnets[0].get_type())
     return 1
 
 

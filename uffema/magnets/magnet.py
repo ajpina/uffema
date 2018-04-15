@@ -19,14 +19,13 @@
 
 __author__ = 'ajpina'
 
-import abc
+from abc import ABCMeta, abstractmethod
 
 from uffema.materials import Material
 from uffema.misc.constants import *
 
 
-class Magnet(object):
-    __metaclass__ = abc.ABCMeta
+class Magnet(metaclass=ABCMeta):
 
     @property
     def material(self):
@@ -44,11 +43,13 @@ class Magnet(object):
     def magnetisation(self, value):
         self._magnetisation = value
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def type(self):
         return 'Should never see this'
 
     @type.setter
+    @abstractmethod
     def type(self, new_type):
         return
 

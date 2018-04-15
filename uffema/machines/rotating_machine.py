@@ -35,51 +35,60 @@
 
 __author__ = 'ajpina'
 
-import abc
+from abc import ABCMeta, abstractmethod
 
 from uffema.stators import Stator
 from uffema.rotors import Rotor
 
-class RotatingMachine(object):
-    __metaclass__ = abc.ABCMeta
+class RotatingMachine(metaclass=ABCMeta):
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def stator(self):
         return 'Should never see this'
 
     @stator.setter
+    @abstractmethod
     def stator(self, new_stator):
         return
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def rotor(self):
         return 'Should never see this'
 
     @rotor.setter
+    @abstractmethod
     def rotor(self, new_rotor):
         return
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def flux(self):
         return 'Should never see this'
 
     @flux.setter
+    @abstractmethod
     def flux(self, new_flux):
         return
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def mode(self):
         return 'Should never see this'
 
     @mode.setter
+    @abstractmethod
     def mode(self, new_mode):
         return
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def type(self):
         return 'Should never see this'
 
     @type.setter
+    @abstractmethod
     def type(self, new_type):
         return
 

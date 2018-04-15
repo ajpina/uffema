@@ -35,17 +35,18 @@
 
 __author__ = 'ajpina'
 
-import abc
+from abc import ABCMeta, abstractmethod
 
 
-class Slot(object):
-    __metaclass__ = abc.ABCMeta
+class Slot(metaclass=ABCMeta):
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def type(self):
         return 'Should never see this'
 
     @type.setter
+    @abstractmethod
     def type(self, new_type):
         return
 
@@ -69,11 +70,11 @@ class Slot(object):
         return slot_instance
 
 
-    @abc.abstractmethod
+    @abstractmethod
     def get_area(self):
         return 'Should never see this'
 
-    @abc.abstractmethod
+    @abstractmethod
     def get_slot_center(self):
         return 'Should never see this'
 

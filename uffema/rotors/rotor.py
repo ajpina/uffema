@@ -19,10 +19,9 @@
 
 __author__ = 'ajpina'
 
-import abc
+from abc import ABCMeta, abstractmethod
 
-class Rotor(object):
-    __metaclass__ = abc.ABCMeta
+class Rotor(metaclass=ABCMeta):
 
     @property
     def inner_radius(self):
@@ -55,12 +54,22 @@ class Rotor(object):
     @pp.setter
     def pp(self, value):
         self._pp = value
+        
+    @property
+    def rotor_position(self):
+        return self._rotor_position
 
-    @abc.abstractproperty
+    @rotor_position.setter
+    def rotor_position(self, value):
+        self._rotor_position = value
+
+    @property
+    @abstractmethod
     def type(self):
         return 'Should never see this'
 
     @type.setter
+    @abstractmethod
     def type(self, new_type):
         return
 
@@ -72,6 +81,7 @@ class Rotor(object):
         self.inner_radius = rotor_settings['iRr']
         self.outer_radius = rotor_settings['oRr']
         self.stack_length = rotor_settings['Rl']
+        self.rotor_position = rotor_settings['init_pos']
         self.type = 'Rotor::'
 
     @staticmethod
