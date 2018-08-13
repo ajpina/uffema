@@ -82,12 +82,12 @@ class SurfacePermanentMagnet(PermanentMagnet):
     def type(self, value):
         self._type = value
 
-    def get_type(self):
+    def get_machine_type(self):
         return 'SPM'
 
 
     def __init__(self, machine_settings):
-        super(SurfacePermanentMagnet, self).__init__(machine_settings)
+        PermanentMagnet.__init__(self, machine_settings, 'spm')
         self.type = self.type + 'SurfacePermanentMagnet'
         self.mode = 'Motor'
         self.flux = 'Radial'

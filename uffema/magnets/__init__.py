@@ -22,3 +22,4 @@ __author__ = 'ajpina'
 from .magnet import Magnet
 from .arc_magnet import ArcMagnet
 from .rectangular_magnet import RectangularMagnet
+from .bread_loaf import BreadLoaf

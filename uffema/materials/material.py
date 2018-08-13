@@ -17,12 +17,62 @@
 # limitations under the License.
 # ==========================================================================
 
+import numpy as np
+
+
 class Material:
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value
+
+    @property
+    def Br(self):
+        return self._Br
+
+    @Br.setter
+    def Br(self, value):
+        self._Br = value
+
+    @property
+    def mur(self):
+        return self._mur
+
+    @mur.setter
+    def mur(self, value):
+        self._mur = value
+
+    @property
+    def resistivity(self):
+        return self._resistivity
+
+    @resistivity.setter
+    def resistivity(self, value):
+        self._resistivity = value
+
+    @property
+    def BH(self):
+        return self._BH
+
+    @BH.setter
+    def BH(self, value):
+        self._BH = value
+
     def __init__(self, material_settings):
-        self.Br = material_settings['Br']
-        self.mur = material_settings['mur']
-        self.resistivity = material_settings['resistivity']
-        self.BH = material_settings['BHcurve']
+        self.name = material_settings.get('name', 'NoName')
+        self.Br = material_settings.get('Br', None)
+        self.mur = material_settings.get('mur', None)
+        self.resistivity = material_settings.get('resistivity', 1.0)
+        BH_list = material_settings.get('BHcurve', None)
+        if BH_list is not None:
+            Bs = [each['B'] for each in BH_list]
+            Hs = [each['H'] for each in BH_list]
+            self.BH = np.array([Bs , Hs])
+        else:
+            self.BH = None
 
     @staticmethod
     def create(material_settings):

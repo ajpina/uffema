@@ -51,7 +51,25 @@ class RectangularMagnet(Magnet):
         return 'Rectangular'
 
     def __init__(self, magnets_settings, magnetisation, material):
-        super(RectangularMagnet, self).__init__(magnets_settings, magnetisation, material)
+        Magnet.__init__(self, magnets_settings, magnetisation, material)
         self.length = magnets_settings['Ml']
         self.width = magnets_settings['Mw']
+        self.magnet_radius = magnets_settings['Mr']
         self.type = self.type + 'Rectangular'
+
+    def get_magnet_geometry(self):
+
+        points = {
+            '700': [self.magnet_radius - 0.5*self.length, 0, 0],
+            '701': [self.magnet_radius + 0.5*self.length, 0, 0],
+            '702': [self.magnet_radius + 0.5*self.length, -0.5*self.width, 0],
+            '703': [self.magnet_radius - 0.5*self.length, -0.5*self.width, 0]
+        }
+        lines = {
+            '700': [700, 701],
+            '701': [701, 702],
+            '702': [702, 703],
+            '703': [703, 700]
+        }
+        return points, lines
+

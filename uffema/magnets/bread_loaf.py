@@ -19,31 +19,39 @@
 
 __author__ = 'ajpina'
 
-from abc import ABCMeta, abstractmethod
+from uffema.magnets import Magnet
 
-class PMPocket(metaclass=ABCMeta):
+
+class BreadLoaf(Magnet):
     @property
-    @abstractmethod
+    def length(self):
+        return self._length
+
+    @length.setter
+    def length(self, value):
+        self._length = value
+
+    @property
+    def width(self):
+        return self._width
+
+    @width.setter
+    def width(self, value):
+        self._width = value
+
+    @property
     def type(self):
-        return 'Should never see this'
+        return self._type
 
     @type.setter
-    @abstractmethod
-    def type(self, new_type):
-        return
+    def type(self, value):
+        self._type = value
 
     def get_type(self):
-        return 'Pocket'
+        return 'BreadLoaf'
 
-    def __init__(self, pockets_settings):
-        self.type = 'Pocket::'
-
-    @staticmethod
-    def create(pockets_settings, pocket_type='u', magnet_settings=None, magnet_type='rectangular'):
-        if pocket_type == 'u':
-            from uffema.pockets import PMUPocket
-            pocket_instance = PMUPocket(pockets_settings, magnet_settings, magnet_type)
-        else:
-            from uffema.pockets import PMUPocket
-            pocket_instance = PMUPocket(pockets_settings, magnet_settings, magnet_type)
-        return pocket_instance
+    def __init__(self, magnets_settings, magnetisation, material):
+        super(BreadLoaf, self).__init__(magnets_settings, magnetisation, material)
+        self.length = magnets_settings['Ml']
+        self.width = magnets_settings['Mw']
+        self.type = self.type + 'BreadLoaf'

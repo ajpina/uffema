@@ -62,8 +62,8 @@ class Slot(metaclass=ABCMeta):
             from uffema.slots import Type0
             slot_instance = Type0(slots_settings)
         elif slot_type == 'type1':
-            from uffema.slots import Type0
-            slot_instance = Type0(slots_settings)
+            from uffema.slots import Type1
+            slot_instance = Type1(slots_settings)
         else:
             from uffema.slots import Type0
             slot_instance = Type0(slots_settings)

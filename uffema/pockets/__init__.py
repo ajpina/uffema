@@ -20,3 +20,4 @@
 __author__ = 'ajpina'
 
 from .pm_pocket import PMPocket
+from .pm_upocket import PMUPocket

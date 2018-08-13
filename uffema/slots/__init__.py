@@ -21,3 +21,4 @@ __author__ = 'ajpina'
 
 from .slot import Slot
 from .type0 import Type0
+from .type1 import Type1

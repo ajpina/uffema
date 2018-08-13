@@ -20,6 +20,7 @@
 __author__ = 'ajpina'
 
 from abc import ABCMeta, abstractmethod
+from uffema.materials import Material
 
 class Rotor(metaclass=ABCMeta):
 
@@ -64,6 +65,14 @@ class Rotor(metaclass=ABCMeta):
         self._rotor_position = value
 
     @property
+    def material(self):
+        return self._material
+
+    @material.setter
+    def material(self, value):
+        self._material = value
+
+    @property
     @abstractmethod
     def type(self):
         return 'Should never see this'
@@ -82,17 +91,19 @@ class Rotor(metaclass=ABCMeta):
         self.outer_radius = rotor_settings['oRr']
         self.stack_length = rotor_settings['Rl']
         self.rotor_position = rotor_settings['init_pos']
+        material_settings = rotor_settings['material']
+        self.material = Material.create(material_settings)
         self.type = 'Rotor::'
 
     @staticmethod
-    def create(rotor_settings):
-        stator_type = rotor_settings['type']
-        if stator_type == 'standardinner':
+    def create(rotor_settings, machine_type):
+        rotor_type = rotor_settings['type']
+        if rotor_type == 'standardinner' and machine_type == 'spm':
             from uffema.rotors import PMStandardInnerRotor
             rotor_instance = PMStandardInnerRotor(rotor_settings)
-        elif stator_type == 'standardouter':
-            from uffema.rotors import PMStandardInnerRotor
-            rotor_instance = PMStandardInnerRotor(rotor_settings)
+        elif rotor_type == 'flatstandardinner' and machine_type == 'ipm':
+            from uffema.rotors import IPMStandardInnerRotor
+            rotor_instance = IPMStandardInnerRotor(rotor_settings)
         else:
             from uffema.rotors import PMStandardInnerRotor
             rotor_instance = PMStandardInnerRotor(rotor_settings)

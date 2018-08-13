@@ -93,16 +93,16 @@ class RotatingMachine(metaclass=ABCMeta):
         return
 
 
-    def get_type(self):
+    def get_machine_type(self):
         return 'RotatingMachine'
 
 
-    def __init__(self, machine_settings):
+    def __init__(self, machine_settings, machine_type):
         self.type = 'RotatingMachine::'
         stator_settings = machine_settings['stator']
-        self.stator = Stator.create(stator_settings)
+        self.stator = Stator.create(stator_settings, machine_type)
         rotor_settings = machine_settings['rotor']
-        self.rotor = Rotor.create(rotor_settings)
+        self.rotor = Rotor.create(rotor_settings, machine_type)
 
     @staticmethod
     def create(machine_settings):
@@ -111,8 +111,8 @@ class RotatingMachine(metaclass=ABCMeta):
             from uffema.machines import SurfacePermanentMagnet
             machine_instance = SurfacePermanentMagnet(machine_settings)
         elif machine_type == 'ipm':
-            from uffema.machines import SurfacePermanentMagnet
-            machine_instance = SurfacePermanentMagnet(machine_settings)
+            from uffema.machines import InteriorPermanentMagnet
+            machine_instance = InteriorPermanentMagnet(machine_settings)
         else:
             from uffema.machines import SurfacePermanentMagnet
             machine_instance = SurfacePermanentMagnet(machine_settings)

@@ -21,3 +21,4 @@ __author__ = 'ajpina'
 
 from .winding import Winding
 from .concentrated import Concentrated
+from .conductors_disposition import ConductorsArea

@@ -92,11 +92,11 @@ class Synchronous(RotatingMachine):
     def type(self, new_type):
         return
 
-    def get_type(self):
+    def get_machine_type(self):
         return 'Synchronous'
 
-    def __init__(self, machine_settings):
-        super(Synchronous, self).__init__(machine_settings)
+    def __init__(self, machine_settings, machine_type):
+        RotatingMachine.__init__(self, machine_settings, machine_type)
         self.type = self.type + 'Synchronous::'
 
 

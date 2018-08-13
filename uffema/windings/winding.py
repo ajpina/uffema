@@ -21,6 +21,8 @@ from abc import ABCMeta, abstractmethod
 import numpy as np
 
 from uffema.misc import *
+from uffema.materials import Material
+from .conductors_disposition import ConductorsArea
 
 
 class Winding(metaclass=ABCMeta):
@@ -122,6 +124,14 @@ class Winding(metaclass=ABCMeta):
         self._end_winding_length = value
 
     @property
+    def material(self):
+        return self._material
+
+    @material.setter
+    def material(self, value):
+        self._material = value
+
+    @property
     @abstractmethod
     def type(self):
         return 'Should never see this'
@@ -137,24 +147,37 @@ class Winding(metaclass=ABCMeta):
     def __init__(self, winding_settings, Ns):
         self.phases = winding_settings['NoPhases']
         self.layers = winding_settings['Layers']
+        self.layers_type = winding_settings['LayersType']
         self.conn = winding_settings['Conn']
+        self.turns_coil = winding_settings['Cturns']
         self.conn_matrix = np.zeros((self.phases * self.layers, Ns), dtype=int)
         row = 0
+        a_plus_found = False
         for la in range(0, self.layers):
             for ph in range(0, self.phases):
                 for ns in  range(0, Ns):
-                    self.conn_matrix[row, ns] = winding_settings['CM'][LAYERS[la]][ns][PHASES[ph]]
+                    self.conn_matrix[row, ns] = self.turns_coil * winding_settings['CM'][LAYERS[la]][ns][PHASES[ph]]
+                    if  not a_plus_found and winding_settings['CM'][LAYERS[la]][ns]['A'] == 1:
+                        a_plus_slot = ns + 1
+                        a_plus_found = True
                 row += 1
         #self._mat = mat
         self.coil_series = winding_settings['Cseries']
         self.coil_parallel = winding_settings['Cparallel']
-        self.turns_coil = winding_settings['Cturns']
         self.wires_in_hand = winding_settings['wih']
         self.conductor_diameter = winding_settings['condDiam']
         self.coil_pitch = winding_settings['Cpitch']
         self.slot_winding_length = 0
         self.end_winding_length = 0
+        self.conductors = ConductorsArea(self.layers, self.layers_type)
+        material_settings = winding_settings['material']
+        self.material = Material.create(material_settings)
         self.type = 'Winding::'
+        slot_pitch = 360.0 / Ns
+        self.armature_a_axis = slot_pitch * ( a_plus_slot + (self.coil_pitch / 2.0) - 1)
+        self.coilside_conductor_area = self.wires_in_hand * self.turns_coil * PI * (self.conductor_diameter / 2.0)**2
+
+
 
     @abstractmethod
     def set_active_length(self, lsw):
@@ -177,3 +200,15 @@ class Winding(metaclass=ABCMeta):
             from uffema.windings import Concentrated
             winding_instance = Concentrated(winding_settings, Ns)
         return winding_instance
+
+    def get_conductors_geometry(self, width, height, base_point):
+        return self.conductors.get_conductors_geometry( width, height, base_point)
+
+    def get_air_around_conductors(self, points, lines):
+        return self.conductors.get_air_around_conductors(points, lines)
+
+    def get_armature_a_axis(self):
+        return self.armature_a_axis
+
+    def get_coilside_conductor_area(self):
+        return self.coilside_conductor_area

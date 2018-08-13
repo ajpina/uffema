@@ -108,21 +108,49 @@ class ArcMagnet(Magnet):
         return 'Arc'
 
     def __init__(self, magnets_settings, magnetisation, material_settings):
-        super(ArcMagnet, self).__init__(magnets_settings, magnetisation, material_settings)
+        Magnet.__init__(self, magnets_settings, magnetisation, material_settings)
         self.length = magnets_settings['Ml']
         self.width = magnets_settings['Mw']
         self.pole_shaping = magnets_settings['Mps']
         self.inner_radius = magnets_settings['iMr']
-        self.outer_radius = self.inner_radius + self.pole_shaping * self.length
+        self.outer_radius = self.inner_radius + self.length
+        RM0 = self.inner_radius + self.length * self.pole_shaping
         #self.inner_arc_angle = (P/PI)*np.arcsin(self.width/(2.0*self.inner_radius))
         #self.outer_arc_angle = (P/PI)*np.arcsin(self.width/(2.0*self.outer_radius))
         # TODO:
         # IT MUST BE MULTIPLIED BY POLE NUMBER
         self.inner_arc_angle = (1.0 / PI) * np.arcsin(self.width / (2.0 * self.inner_radius))
-        self.outer_arc_angle = (1.0 / PI) * np.arcsin(self.width / (2.0 * self.outer_radius))
+        self.outer_arc_angle = (1.0 / PI) * np.arcsin(self.width / (2.0 * RM0))
         self.mean_arc_angle = ((self.inner_arc_angle+self.outer_arc_angle)/2.0)
         self.deviation = magnets_settings['delta']*DEG2RAD
         self.type = self.type + 'Arc'
 
 
+    def get_magnet_geometry(self, pp):
 
+        beta = PI / pp
+        RM0 = self.inner_radius + self.length * self.pole_shaping
+        RM1 = self.outer_radius
+        Miaa = 2 * pp * self.inner_arc_angle
+        Moaa = 2 * pp * self.outer_arc_angle
+        a_delta = RM0 * np.sin(beta * Moaa / 2.0)
+        b_delta = RM1 - RM0 * np.cos(beta * Moaa / 2.0)
+        c_delta = np.sqrt( a_delta**2.0 + b_delta**2.0 )
+        beta_delta = np.arctan2( a_delta, b_delta)
+        alpha_delta = PI - 2 * beta_delta
+        Rps = c_delta * np.sin( beta_delta ) / np.sin( alpha_delta)
+
+        points = {
+            '700': [self.inner_radius, 0, 0],
+            '701': [self.outer_radius, 0, 0],
+            '702': [RM1 - Rps, 0, 0],
+            '703': [RM0 * np.cos(-beta * Moaa / 2.0), RM0 * np.sin(-beta * Moaa / 2.0), 0],
+            '704': [self.inner_radius * np.cos(-beta * Miaa / 2.0), self.inner_radius * np.sin(-beta * Miaa / 2.0), 0]
+        }
+        lines = {
+            '700': [700, 701],
+            '701': [701, 702, 703],
+            '702': [703, 704],
+            '703': [704, 1, 700]
+        }
+        return points, lines

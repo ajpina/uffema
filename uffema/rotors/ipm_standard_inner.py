@@ -26,7 +26,7 @@ from uffema.magnets import Magnet
 from uffema.pockets import PMPocket
 
 
-class PMStandardInnerRotor(Rotor):
+class IPMStandardInnerRotor(Rotor):
 
     @property
     def magnets(self):
@@ -61,25 +61,22 @@ class PMStandardInnerRotor(Rotor):
         self._type = value
 
     def get_type(self):
-        return 'PMInner'
+        return 'IPMInner'
 
     def __init__(self, rotor_settings):
-        super(PMStandardInnerRotor, self).__init__(rotor_settings)
+        Rotor.__init__(self, rotor_settings)
         self.magnets = []
         for i, magnet_settings in enumerate(rotor_settings['magnets']['dimension']):
             self.magnets.insert(i, Magnet.create(magnet_settings, rotor_settings['magnets']['type'],
                                                  rotor_settings['magnets']['magnetisation'],
                                                  rotor_settings['magnets']['material']))
-
         self.pockets = []
         if 'pockets' in rotor_settings:
             for i, pocket_settings in enumerate(rotor_settings['pockets']['dimension']):
-                self.pockets.insert(i, PMPocket.create(pocket_settings, rotor_settings['pockets']['type'],
-                                                       rotor_settings['magnets']['dimension'][0],
-                                                       rotor_settings['magnets']['type'] ))
+                self.pockets.insert(i, PMPocket.create(pocket_settings, rotor_settings['pockets']['type'], magnet_settings, rotor_settings['magnets']['type']))
 
         self.initial_position = rotor_settings['init_pos'] * DEG2RAD
-        self.type = self.type + 'PMStandardInner'
+        self.type = self.type + 'IPMStandardInner'
 
 
     def get_shaft_geometry(self):
@@ -97,45 +94,49 @@ class PMStandardInnerRotor(Rotor):
         return points, lines
 
     def get_magnet_geometry(self):
-        return self.magnets[0].get_magnet_geometry(self.pp)
+        return self.magnets[0].get_magnet_geometry()
 
     def get_core_geometry(self):
-        # Needs to be modified if more than 4 points are used by magnets
+        magnet_points, magnet_lines = self.magnets[0].get_magnet_geometry()
+        keys = list(magnet_points.keys())
+        p0 = keys[0]
+        p1 = keys[1]
         pole_pitch = PI / self.pp
         points = {
-            '502': [self.outer_radius * np.cos (-pole_pitch/2.0), self.outer_radius * np.sin(-pole_pitch/2.0), 0]
+            '502': [self.outer_radius, 0, 0],
+            '503': [self.outer_radius * np.cos (-pole_pitch/2.0), self.outer_radius * np.sin(-pole_pitch/2.0), 0]
         }
         lines = {
-            '503': [500, 700],
-            '-703': [0],
-            '504': [704, 1, 502],
-            '505': [502, 501],
+            '503': [500, int(p0)],
+            '504': [int(p0), int(p1)],
+            '505': [int(p1), 502],
+            '506': [502, 1, 503],
+            '507': [503, 501],
             '-501': [0]
         }
+
         return points, lines
 
     def get_pocket_geometry(self):
-        pass
+        return self.pockets[0].get_pocket_geometry(self.outer_radius)
 
     def get_rotor_airgap_geometry(self, airgap_radius):
         pole_pitch = PI / self.pp
         points = {
-            '503': [airgap_radius, 0, 0],
-            '504': [airgap_radius * np.cos(-pole_pitch / 2.0), airgap_radius * np.sin(-pole_pitch / 2.0), 0]
+            '504': [airgap_radius, 0, 0],
+            '505': [airgap_radius * np.cos(-pole_pitch / 2.0), airgap_radius * np.sin(-pole_pitch / 2.0), 0]
         }
         lines = {
-            '506': [701, 503],
-            '507': [503, 1, 504],
-            '508': [504, 502],
-            '-504': [0],
-            '-702': [0],
-            '-701': [0]
+            '508': [502, 504],
+            '509': [504, 1, 505],
+            '600': [505, 503],
+            '-506': [0]
         }
         return points, lines
 
 
     def get_master_boundary(self):
-        return [508, 505, 502]
+        return [600, 507, 502]
 
     def get_sliding_boundary(self):
-        return [507]
+        return [509]

@@ -18,11 +18,12 @@
 # ==========================================================================
 
 """
-    Base class for permanent magnet synchronous machines
+    Class for permanent magnet synchronous motors of the type
+    surface-mounted permanent magnets
 """
 
 # ==========================================================================
-# Program:   permanent_magnet.py
+# Program:   surface_permanent_magnet.py
 # Author:    ajpina
 # Date:      12/23/16
 # Version:   0.1.1
@@ -35,69 +36,66 @@
 
 __author__ = 'ajpina'
 
-from abc import abstractmethod
 
-from uffema.machines import Synchronous
+from uffema.machines import PermanentMagnet
 
 
-class PermanentMagnet(Synchronous):
+class InteriorPermanentMagnet(PermanentMagnet):
 
     @property
-    @abstractmethod
     def stator(self):
-        return 'Should never see this'
+        return self._stator
 
     @stator.setter
-    @abstractmethod
-    def stator(self, new_stator):
-        return
+    def stator(self, value):
+        self._stator = value
 
     @property
-    @abstractmethod
     def rotor(self):
-        return 'Should never see this'
+        return self._rotor
 
     @rotor.setter
-    @abstractmethod
-    def rotor(self, new_rotor):
-        return
+    def rotor(self, value):
+        self._rotor = value
 
     @property
-    @abstractmethod
     def flux(self):
-        return 'Should never see this'
+        return self._flux
 
     @flux.setter
-    @abstractmethod
-    def flux(self, new_flux):
-        return
+    def flux(self, value):
+        self._flux = value
 
     @property
-    @abstractmethod
     def mode(self):
-        return 'Should never see this'
+        return self._mode
 
     @mode.setter
-    @abstractmethod
-    def mode(self, new_mode):
-        return
+    def mode(self, value):
+        self._mode = value
 
     @property
-    @abstractmethod
     def type(self):
-        return 'Should never see this'
+        return self._type
 
     @type.setter
-    @abstractmethod
-    def type(self, new_type):
-        return
+    def type(self, value):
+        self._type = value
 
     def get_machine_type(self):
-        return 'PermanentMagnet'
+        return 'IPM'
 
-    def __init__(self, machine_settings, machine_type):
-        Synchronous.__init__(self, machine_settings, machine_type)
-        self.type = self.type + 'PermanentMagnet::'
+
+    def __init__(self, machine_settings):
+        PermanentMagnet.__init__(self, machine_settings, 'ipm')
+        self.type = self.type + 'InteriorPermanentMagnet'
+        self.mode = 'Motor'
+        self.flux = 'Radial'
+
+
+
+
+
 
 
 

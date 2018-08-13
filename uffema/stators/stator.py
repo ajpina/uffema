@@ -40,6 +40,7 @@ from abc import ABCMeta, abstractmethod
 from uffema.misc import *
 from uffema.slots import Slot
 from uffema.windings import Winding
+from uffema.materials import Material
 
 
 class Stator(metaclass=ABCMeta):
@@ -93,6 +94,14 @@ class Stator(metaclass=ABCMeta):
         self._winding = value
 
     @property
+    def material(self):
+        return self._material
+
+    @material.setter
+    def material(self, value):
+        self._material = value
+
+    @property
     @abstractmethod
     def type(self):
         return 'Should never see this'
@@ -118,10 +127,12 @@ class Stator(metaclass=ABCMeta):
         self.winding.set_active_length(self.stack_length)
         slotCenter = self.slots[0].get_slot_center()
         self.winding.set_end_winding_length(self.slots_number, self.inner_radius, slotCenter)
+        material_settings = stator_settings['material']
+        self.material = Material.create(material_settings)
         self.type = 'Stator::'
 
     @staticmethod
-    def create(stator_settings):
+    def create(stator_settings, machine_type):
         stator_type = stator_settings['type']
         if stator_type == 'standardouter':
             from uffema.stators import StandardOuterStator

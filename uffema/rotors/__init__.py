@@ -21,3 +21,4 @@ __author__ = 'ajpina'
 
 from .rotor import Rotor
 from .pm_standard_inner import PMStandardInnerRotor
+from .ipm_standard_inner import IPMStandardInnerRotor
