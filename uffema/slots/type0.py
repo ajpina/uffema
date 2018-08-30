@@ -22,7 +22,7 @@
 """
 
 # ==========================================================================
-# Program:   surface_permanent_magnet.py
+# Program:   type0.py
 # Author:    ajpina
 # Date:      12/23/16
 # Version:   0.1.1
@@ -167,11 +167,13 @@ class Type0(Slot):
         return inner_radius + self.h0 + self.h1
 
     def get_slot_opening_geometry(self, inner_radius):
+        delta_5 = np.arctan2(-self.w0/2.0,inner_radius)
+        r_5 = inner_radius
         points = {
             '2': [inner_radius, 0, 0],
             '3': [inner_radius + self.h0, 0, 0],
             '4': [inner_radius + self.h0, -self.w0/2.0, 0],
-            '5': [inner_radius, -self.w0/2.0, 0]
+            '5': [r_5*np.cos(delta_5), r_5*np.sin(delta_5) , 0]
         }
         lines = {
             '1': [2, 3],
