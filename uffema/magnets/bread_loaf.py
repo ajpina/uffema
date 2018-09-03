@@ -20,9 +20,10 @@
 __author__ = 'ajpina'
 
 from uffema.magnets import Magnet
+from uffema.misc.constants import *
 
 
-class BreadLoaf(Magnet):
+class BreadLoafMagnet(Magnet):
     @property
     def length(self):
         return self._length
@@ -40,6 +41,14 @@ class BreadLoaf(Magnet):
         self._width = value
 
     @property
+    def pole_shaping(self):
+        return self._pole_shaping
+
+    @pole_shaping.setter
+    def pole_shaping(self, value):
+        self._pole_shaping = value
+
+    @property
     def type(self):
         return self._type
 
@@ -50,8 +59,46 @@ class BreadLoaf(Magnet):
     def get_type(self):
         return 'BreadLoaf'
 
-    def __init__(self, magnets_settings, magnetisation, material):
-        super(BreadLoaf, self).__init__(magnets_settings, magnetisation, material)
+    def __init__(self, magnets_settings, magnetisation, material_settings):
+        Magnet.__init__(self, magnets_settings, magnetisation, material_settings)
         self.length = magnets_settings['Ml']
         self.width = magnets_settings['Mw']
+        self.pole_shaping = magnets_settings['Mps']
+        self.magnet_radius = magnets_settings['Mr']
+        self.outer_radius = self.magnet_radius + self.length
+        self.deviation = magnets_settings['delta']*DEG2RAD
         self.type = self.type + 'BreadLoaf'
+
+
+    def get_magnet_geometry(self, pp):
+
+        beta = PI / pp
+        r_701 = self.magnet_radius + self.length
+        r_703 = np.sqrt( (self.magnet_radius + self.length * self.pole_shaping)**2 + (self.width/2.0)**2 )
+        r_704 = np.sqrt( (self.magnet_radius)**2 + (self.width/2.0)**2 )
+        alpha_703 = np.arctan2(-self.width/2.0, self.magnet_radius + self.length * self.pole_shaping)
+        alpha_704 = np.arctan2(-self.width / 2.0, self.magnet_radius )
+        Miaa = 2 * pp * alpha_704
+        Moaa = 2 * pp * alpha_703
+        a_delta = r_704 * np.sin(beta * Moaa / 2.0)
+        b_delta = r_701 - r_704 * np.cos(beta * Moaa / 2.0)
+        c_delta = np.sqrt(a_delta ** 2.0 + b_delta ** 2.0)
+        beta_delta = np.arctan2(a_delta, b_delta)
+        alpha_delta = PI - 2 * beta_delta
+        Rps = c_delta * np.sin(beta_delta) / np.sin(alpha_delta)
+
+        points = {
+            '700': [self.magnet_radius, 0, 0],
+            '701': [r_701, 0, 0],
+            '702': [r_701 - Rps, 0, 0],
+            '703': [r_703 * np.cos(-alpha_703), r_703 * np.sin(-alpha_703), 0],
+            '704': [r_704 * np.cos(-alpha_704), r_704 * np.sin(-alpha_704), 0]
+        }
+        lines = {
+            '700': [700, 701],
+            '701': [701, 702, 703],
+            '702': [703, 704],
+            '703': [704, 1, 700]
+        }
+        return points, lines
+

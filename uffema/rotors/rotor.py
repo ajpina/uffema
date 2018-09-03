@@ -98,12 +98,15 @@ class Rotor(metaclass=ABCMeta):
     @staticmethod
     def create(rotor_settings, machine_type):
         rotor_type = rotor_settings['type']
-        if rotor_type == 'standardinner' and machine_type == 'spm':
-            from uffema.rotors import PMStandardInnerRotor
-            rotor_instance = PMStandardInnerRotor(rotor_settings)
-        elif rotor_type == 'flatstandardinner' and machine_type == 'ipm':
-            from uffema.rotors import IPMStandardInnerRotor
-            rotor_instance = IPMStandardInnerRotor(rotor_settings)
+        if rotor_type == 'spm0' and machine_type == 'spm':
+            from uffema.rotors import SPM0
+            rotor_instance = SPM0(rotor_settings)
+        elif rotor_type == 'spm1' and machine_type == 'spm':
+            from uffema.rotors import SPM1
+            rotor_instance = SPM1(rotor_settings)
+        elif rotor_type == 'ipm0' and machine_type == 'ipm':
+            from uffema.rotors import IPM0
+            rotor_instance = IPM0(rotor_settings)
         else:
             from uffema.rotors import PMStandardInnerRotor
             rotor_instance = PMStandardInnerRotor(rotor_settings)

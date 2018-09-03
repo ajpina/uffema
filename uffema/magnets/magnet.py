@@ -69,6 +69,9 @@ class Magnet(metaclass=ABCMeta):
         elif magnet_type == 'rectangular':
             from uffema.magnets import RectangularMagnet
             magnet_instance = RectangularMagnet(magnets_settings, magnetisation, material_settings)
+        elif magnet_type == 'breadloaf':
+            from uffema.magnets import BreadLoafMagnet
+            magnet_instance = BreadLoafMagnet(magnets_settings, magnetisation, material_settings)
         else:
             from uffema.magnets import ArcMagnet
             magnet_instance = ArcMagnet(magnets_settings, magnetisation, material_settings)

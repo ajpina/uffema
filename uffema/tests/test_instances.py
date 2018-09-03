@@ -40,11 +40,11 @@ from uffema.machines import *
 
 
 def main():
-    with open('uid_sid_aid_9s6p.msf') as msf:
+    with open('motor_0b.msf') as msf:
         machine_settings = json.load(msf)
     spm = RotatingMachine.create(machine_settings['machine'])
     print (spm.type)
-    print (spm.get_type())
+    print (spm.get_machine_type())
     print (spm.stator.type)
     print (spm.stator.get_type())
     print (spm.stator.slots[0].type)
