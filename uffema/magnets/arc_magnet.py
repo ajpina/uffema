@@ -104,6 +104,22 @@ class ArcMagnet(Magnet):
     def type(self, value):
         self._type = value
 
+    @property
+    def mag_angle(self):
+        return self._mag_angle
+
+    @mag_angle.setter
+    def mag_angle(self, value):
+        self._mag_angle = value
+
+    @property
+    def magnets_per_pole(self):
+        return self._magnets_per_pole
+
+    @magnets_per_pole.setter
+    def magnets_per_pole(self, value):
+        self._magnets_per_pole = value
+
     def get_type(self):
         return 'Arc'
 
@@ -123,6 +139,8 @@ class ArcMagnet(Magnet):
         self.outer_arc_angle = (1.0 / PI) * np.arcsin(self.width / (2.0 * RM0))
         self.mean_arc_angle = ((self.inner_arc_angle+self.outer_arc_angle)/2.0)
         self.deviation = magnets_settings['delta']*DEG2RAD
+        self.magnets_per_pole = 1
+        self.mag_angle = [0]
         self.type = self.type + 'Arc'
 
 

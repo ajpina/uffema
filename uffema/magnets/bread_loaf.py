@@ -52,6 +52,22 @@ class BreadLoafMagnet(Magnet):
     def type(self):
         return self._type
 
+    @property
+    def mag_angle(self):
+        return self._mag_angle
+
+    @mag_angle.setter
+    def mag_angle(self, value):
+        self._mag_angle = value
+
+    @property
+    def magnets_per_pole(self):
+        return self._magnets_per_pole
+
+    @magnets_per_pole.setter
+    def magnets_per_pole(self, value):
+        self._magnets_per_pole = value
+
     @type.setter
     def type(self, value):
         self._type = value
@@ -67,6 +83,8 @@ class BreadLoafMagnet(Magnet):
         self.magnet_radius = magnets_settings['Mr']
         self.outer_radius = self.magnet_radius + self.length
         self.deviation = magnets_settings['delta']*DEG2RAD
+        self.magnets_per_pole = 1
+        self.mag_angle = [0]
         self.type = self.type + 'BreadLoaf'
 
 
@@ -78,10 +96,8 @@ class BreadLoafMagnet(Magnet):
         r_704 = np.sqrt( (self.magnet_radius)**2 + (self.width/2.0)**2 )
         alpha_703 = np.arctan2(-self.width/2.0, self.magnet_radius + self.length * self.pole_shaping)
         alpha_704 = np.arctan2(-self.width / 2.0, self.magnet_radius )
-        Miaa = 2 * pp * alpha_704
-        Moaa = 2 * pp * alpha_703
-        a_delta = r_704 * np.sin(beta * Moaa / 2.0)
-        b_delta = r_701 - r_704 * np.cos(beta * Moaa / 2.0)
+        a_delta = self.width / 2.0
+        b_delta = self.length * (1 - self.pole_shaping)
         c_delta = np.sqrt(a_delta ** 2.0 + b_delta ** 2.0)
         beta_delta = np.arctan2(a_delta, b_delta)
         alpha_delta = PI - 2 * beta_delta
@@ -91,14 +107,14 @@ class BreadLoafMagnet(Magnet):
             '700': [self.magnet_radius, 0, 0],
             '701': [r_701, 0, 0],
             '702': [r_701 - Rps, 0, 0],
-            '703': [r_703 * np.cos(-alpha_703), r_703 * np.sin(-alpha_703), 0],
-            '704': [r_704 * np.cos(-alpha_704), r_704 * np.sin(-alpha_704), 0]
+            '703': [r_703 * np.cos(alpha_703), r_703 * np.sin(alpha_703), 0],
+            '704': [r_704 * np.cos(alpha_704), r_704 * np.sin(alpha_704), 0]
         }
         lines = {
             '700': [700, 701],
             '701': [701, 702, 703],
             '702': [703, 704],
-            '703': [704, 1, 700]
+            '703': [704, 700]
         }
         return points, lines
 

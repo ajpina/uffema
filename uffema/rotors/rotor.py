@@ -107,6 +107,9 @@ class Rotor(metaclass=ABCMeta):
         elif rotor_type == 'ipm0' and machine_type == 'ipm':
             from uffema.rotors import IPM0
             rotor_instance = IPM0(rotor_settings)
+        elif rotor_type == 'ipm1' and machine_type == 'ipm':
+            from uffema.rotors import IPM1
+            rotor_instance = IPM1(rotor_settings)
         else:
             from uffema.rotors import PMStandardInnerRotor
             rotor_instance = PMStandardInnerRotor(rotor_settings)

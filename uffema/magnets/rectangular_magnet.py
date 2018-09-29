@@ -47,14 +47,32 @@ class RectangularMagnet(Magnet):
     def type(self, value):
         self._type = value
 
+    @property
+    def mag_angle(self):
+        return self._mag_angle
+
+    @mag_angle.setter
+    def mag_angle(self, value):
+        self._mag_angle = value
+
+    @property
+    def magnets_per_pole(self):
+        return self._magnets_per_pole
+
+    @magnets_per_pole.setter
+    def magnets_per_pole(self, value):
+        self._magnets_per_pole = value
+
     def get_type(self):
         return 'Rectangular'
 
     def __init__(self, magnets_settings, magnetisation, material):
-        Magnet.__init__(self, magnets_settings, magnetisation, material)
+        Magnet.__init__(self, magnets_settings, "parallel", material)
         self.length = magnets_settings['Ml']
         self.width = magnets_settings['Mw']
         self.magnet_radius = magnets_settings['Mr']
+        self.magnets_per_pole = 1
+        self.mag_angle = [0]
         self.type = self.type + 'Rectangular'
 
     def get_magnet_geometry(self):

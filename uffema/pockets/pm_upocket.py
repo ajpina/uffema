@@ -51,9 +51,11 @@ class PMUPocket(PMPocket):
         self.type = self.type + 'U'
 
     def get_pocket_geometry(self, outer_radius):
+        points = []
+        lines = []
         radius_at_bridge = np.sqrt((outer_radius - self.bridge_length)**2 + (0.5*self.flux_barrier_length)**2)
         delta_beta_at_bridge = np.arctan2(self.flux_barrier_length, 2 * (outer_radius - self.bridge_length))
-        points = {
+        points.append({
             '900': [self.magnet_radius + 0.5*self.magnet_length, -0.5*self.magnet_width, 0],
             '901': [self.magnet_radius + 0.5 * self.length, -(0.5 * self.magnet_width + self.extension1), 0],
             '902': [radius_at_bridge * np.cos(-0.5*self.pocket_angle + delta_beta_at_bridge),
@@ -63,8 +65,8 @@ class PMUPocket(PMPocket):
             '904': [self.magnet_radius - 0.5 * self.length, -(0.5 * self.magnet_width + self.extension1 + self.extension2), 0],
             '905': [self.magnet_radius - 0.5 * self.length, -(0.5 * self.magnet_width + self.extension1), 0],
             '906': [self.magnet_radius - 0.5*self.magnet_length, -0.5*self.magnet_width, 0]
-        }
-        lines = {
+        })
+        lines.append({
             '900': [900, 901],
             '901': [901, 902],
             '902': [902, 903],
@@ -72,6 +74,6 @@ class PMUPocket(PMPocket):
             '904': [904, 905],
             '905': [905, 906],
             '906': [906, 900]
-        }
+        })
         return points, lines
 

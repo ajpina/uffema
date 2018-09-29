@@ -43,6 +43,9 @@ class PMPocket(metaclass=ABCMeta):
         if pocket_type == 'u':
             from uffema.pockets import PMUPocket
             pocket_instance = PMUPocket(pockets_settings, magnet_settings, magnet_type)
+        elif pocket_type == 'v':
+            from uffema.pockets import PMVPocket
+            pocket_instance = PMVPocket(pockets_settings, magnet_settings, magnet_type)
         else:
             from uffema.pockets import PMUPocket
             pocket_instance = PMUPocket(pockets_settings, magnet_settings, magnet_type)
