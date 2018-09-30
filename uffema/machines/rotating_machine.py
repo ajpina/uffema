@@ -39,6 +39,7 @@ from abc import ABCMeta, abstractmethod
 
 from uffema.stators import Stator
 from uffema.rotors import Rotor
+from uffema.misc.constants import *
 
 class RotatingMachine(metaclass=ABCMeta):
 
@@ -118,3 +119,9 @@ class RotatingMachine(metaclass=ABCMeta):
             machine_instance = SurfacePermanentMagnet(machine_settings)
 
         return machine_instance
+
+    def __str__(self):
+        output = "This is a Rotating Machine powered by UFFEMA Version {0}\n".format(UFFEMA_VERSION__)
+        output = output + str("UFFEMA is Licensed under the Apache License,\n"
+                              "Version 2.0\n\n")
+        return output

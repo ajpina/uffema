@@ -27,6 +27,7 @@ LOG_WARN = 2
 LOG_INFO = 3
 LOG_ALL = 4
 
+UFFEMA_VERSION__ = 0.1
 
 MU0 = np.pi*4e-7
 DEG2RAD = np.pi / 180.0
