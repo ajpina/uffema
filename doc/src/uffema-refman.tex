@@ -32,6 +32,9 @@
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{lgray}{rgb}{0.9,0.9,0.9}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+\colorlet{punct}{red!60!black}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
 
 \lstloadlanguages{Python,bash}
 
@@ -79,7 +82,7 @@
   }
 
 \lstdefinelanguage{json}{
-    basicstyle=\normalfont\ttfamily,
+    basicstyle=\normalfont\ttfamily\footnotesize,
     numbers=left,
     numberstyle=\scriptsize,
     stepnumber=1,
@@ -87,7 +90,9 @@
     showstringspaces=false,
     breaklines=true,
     frame=lines,
-    backgroundcolor=\color{background},
+    otherkeywords={Float, String, Integer},
+    keywordstyle=\color{blue},
+    backgroundcolor=\color{lgray},
     literate=
      *{0}{{{\color{numb}0}}}{1}
       {1}{{{\color{numb}1}}}{1}
@@ -99,6 +104,7 @@
       {7}{{{\color{numb}7}}}{1}
       {8}{{{\color{numb}8}}}{1}
       {9}{{{\color{numb}9}}}{1}
+      {"}{{{\color{red}{"}}}}{1}
       {:}{{{\color{punct}{:}}}}{1}
       {,}{{{\color{punct}{,}}}}{1}
       {\{}{{{\color{delim}{\{}}}}{1}
@@ -325,7 +331,7 @@ $ uffema-tester options [filename]
 
 The following options are currently supported by \textbf{\texttt{uffema-tester}}:
  \begin{description}[leftmargin=1cm, style=nextline]
-\item  \item [{\normalfont\ttfamily{\textbf{-v}}}]  \hfil \newline Prints the version.
+\item [{\normalfont\ttfamily{\textbf{-v}}}]  \hfil \newline Prints the version.
  \item [{\normalfont\ttfamily{\textbf{-f}}}]  {\ttfamily{filename}} \\ Reads the machine settings file and creates a python instance. 					
  \end{description}
 
@@ -436,10 +442,93 @@ Average Rate & 0.920 & 0.882 & 0.477 & 0.539 & 0.923\\ % Summary/total row
 %	CHAPTER 2
 %----------------------------------------------------------------------------------------
 
-\chapter{Chapter 2 Title}
-\label{ch:2}
+\chapter{Slots}
+\label{ch:slots}
 
-\lipsum[13-20]
+The number of slots where the conductors are to be inserted are defined in the parent component, either stator or rotor. However, the "slots" object must contain type and dimension, as follows:
+\begin{description}[leftmargin=4cm, style=nextline]
+\item[\normalfont{\ttfamily{\textbf{type}}: \textit{String}}] Type of slot, for instance, \textit{type$0$}, \textit{type$1$}, etc.
+\item[\normalfont{\ttfamily{\textbf{dimension}}: \textit{Array}}] List of parameters that define the geometry according with its \texttt{\textbf{type}}.
+\end{description}
+
+Additional parameters for the position of slots on the parent component, for instance, \texttt{\textbf{SOpos}} and \texttt{\textbf{Spos}} are inserted in the \texttt{\textbf{dimension}} field. These are angles for the placement of slot openings and coil regions, respectively. Even though these might be calculated most of the cases with the total number of slots, are particularly useful for an asymmetrical arrangement. 
+
+\begin{lstlisting}[language=json]
+"slots" : {
+	"type" :  String,
+	"dimension": [
+		{
+			"SOpos" : Float,
+			"Spos" : Float,
+			...
+		},
+		{
+			"SOpos" : Float,
+			"Spos" : Float,
+			...
+		},
+	]
+}
+\end{lstlisting}
+
+\begin{marginfigure}
+\includegraphics[width=\linewidth]{Slot_Type_0_parameters.pdf}
+\caption{Parameters for slot type $0$.}
+\label{fig:slot_type_0_pareameters}
+\end{marginfigure}
+
+Other parameters follow the two aforementioned, these depend on the type of the slot selected. More detail about the parameters for each slot supported by UFFEMA are described in the next sections.
+
+\section[Type 0]{Type $0$}
+The following parameters set forth slot opening, wedge and coil regions for slots type $0$ (type$0$), according to Figure \ref{fig:slot_type_0_pareameters} and \ref{fig:slot_type_0}, are also embedded in \texttt{\textbf{dimension}} field.  The latter figure shows points, lines and loops in order to build surfaces if the geometry is to be meshed. 
+
+
+
+\begin{marginfigure}
+\includegraphics[width=\linewidth]{Slot_Type_0.pdf}
+\caption{Type $0$. Points, lines and loops.}
+\label{fig:slot_type_0}
+\end{marginfigure}
+
+
+\begin{description}[leftmargin=4cm, style=nextline]
+\item[\normalfont{\ttfamily{\textbf{w0}}: \textit{Float}}] Slot opening width.
+\item[\normalfont{\ttfamily{\textbf{w1}}: \textit{Float}}] Wedge region width.
+\item[\normalfont{\ttfamily{\textbf{w2}}: \textit{Float}}] Coil region width.
+\item[\normalfont{\ttfamily{\textbf{h0}}: \textit{Float}}] Slot opening height.
+\item[\normalfont{\ttfamily{\textbf{h1}}: \textit{Float}}] Wedge region height.
+\item[\normalfont{\ttfamily{\textbf{h2}}: \textit{Float}}] Coil region height.
+\item[\normalfont{\ttfamily{\textbf{h3}}: \textit{Float}}] Slot bottom height.
+\end{description}
+
+
+\section[Type 1]{Type $1$}
+The following parameters set forth slot opening and coil regions for slots type $1$ (type$1$), according to Figure \ref{fig:slot_type_1_pareameters} and \ref{fig:slot_type_1}. Note that slots of type $1$ do not show wedge regions and toothtips are concentric.  These parameters are also embedded in \texttt{\textbf{dimension}} field.  The latter figure shows points, lines and loops in order to build surfaces if the geometry is to be meshed. 
+
+\begin{marginfigure}
+\includegraphics[width=\linewidth]{Slot_Type_0_parameters.pdf}
+\caption{Parameters for slot type $1$.}
+\label{fig:slot_type_1_pareameters}
+\end{marginfigure}
+
+\begin{marginfigure}
+\includegraphics[width=\linewidth]{Slot_Type_1.pdf}
+\caption{Type $1$. Points, lines and loops.}
+\label{fig:slot_type_1}
+\end{marginfigure}
+
+
+\begin{description}[leftmargin=4cm, style=nextline]
+\item[\normalfont{\ttfamily{\textbf{w0}}: \textit{Float}}] Slot opening width.
+\item[\normalfont{\ttfamily{\textbf{w1}}: \textit{Float}}] Wedge region width.
+\item[\normalfont{\ttfamily{\textbf{w2}}: \textit{Float}}] Coil region width.
+\item[\normalfont{\ttfamily{\textbf{h0}}: \textit{Float}}] Slot opening height.
+\item[\normalfont{\ttfamily{\textbf{h2}}: \textit{Float}}] Coil region height.
+\end{description}
+
+
+
+
 
 %----------------------------------------------------------------------------------------
 
