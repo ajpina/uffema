@@ -22,7 +22,7 @@
 """
 
 # ==========================================================================
-# Program:   test_instances.py
+# Program:   uffema-test.py
 # Author:    ajpina
 # Date:      12/23/16
 # Version:   0.1.1
@@ -34,27 +34,52 @@
 # ==========================================================================
 
 import sys
+import getopt
 import json
 
 from uffema.machines import *
+from uffema.misc.constants import *
 
 
-def main():
-    with open('motor_0b.msf') as msf:
+class Usage(Exception):
+    def __init__(self, msg):
+        self.msg = "[Error]: %s" % ( msg )
+
+
+def main(argv=None):
+    filename = None
+    if argv is None:
+        argv = sys.argv
+    try:
+        try:
+            opts, args = getopt.getopt(argv[1:], "hvf:", ["help", "version", "file"])
+        except getopt.GetoptError as msg:
+            raise Usage(msg)
+        for opt, arg in opts:
+            if opt in ("-h", "--help"):
+                print("This is UFFEMA Version {0}".format(UFFEMA_VERSION__))
+                print("Usage: uffema-test.py [options] [filename]")
+                print("Options:")
+                print("-f, --file <filename>")
+                sys.exit()
+            elif opt in ("-v", "--version"):
+                print("This is UFFEMA Version {0}".format(UFFEMA_VERSION__))
+                sys.exit()
+            elif opt in ("-f", "--file"):
+                filename = arg
+
+    except Usage as err:
+        print(err.msg, file=sys.stderr)
+        print("for help use --help", file=sys.stderr)
+        return 2
+
+    if filename is None:
+        raise Usage("algo")
+
+    with open(filename) as msf:
         machine_settings = json.load(msf)
     spm = RotatingMachine.create(machine_settings['machine'])
-    print (spm.type)
-    print (spm.get_machine_type())
-    print (spm.stator.type)
-    print (spm.stator.get_type())
-    print (spm.stator.slots[0].type)
-    print (spm.stator.slots[0].get_type())
-    print (spm.stator.winding.type)
-    print (spm.stator.winding.get_type())
-    print (spm.rotor.type)
-    print (spm.rotor.get_type())
-    print (spm.rotor.magnets[0].type)
-    print (spm.rotor.magnets[0].get_type())
+    print(spm)
     return 1
 
 

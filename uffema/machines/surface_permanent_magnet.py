@@ -92,6 +92,11 @@ class SurfacePermanentMagnet(PermanentMagnet):
         self.mode = 'Motor'
         self.flux = 'Radial'
 
+    def __str__(self):
+        output = "Classification: Surface Permanent Magnet\n"
+        output = output + self.stator.__str__()
+        output = output + self.rotor.__str__()
+        return PermanentMagnet.__str__(self) + output
 
 
 
