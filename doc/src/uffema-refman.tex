@@ -18,7 +18,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass{tufte-book} % Use the tufte-book class which in turn uses the tufte-common class
+\documentclass[justified]{tufte-book} % Use the tufte-book class which in turn uses the tufte-common class
 
 \hypersetup{colorlinks} % Comment this line if you don't wish to have colored links
 
@@ -72,7 +72,7 @@
     otherkeywords={=, +, [, ], (, ), \{, \}, *},
     % bash commands from:
     %http://www.math.montana.edu/Rweb/Rhelp/00Index.html
-    emph={git, clone, uffema,tester},
+    emph={git, clone, uffema,test},
     breaklines=true,
     keywordstyle=\color{red},
     stringstyle=\color{red},
@@ -141,6 +141,8 @@
 
 \newcommand{\blankpage}{\newpage\hbox{}\thispagestyle{empty}\newpage} % Command to insert a blank page
 
+\setcounter{secnumdepth}{2}
+
 \usepackage{makeidx} % Used to generate the index
 \makeindex % Generate the index which is printed at the end of the document
 
@@ -158,7 +160,7 @@
 
 \begin{document}
 
-\frontmatter
+ \frontmatter
 
 \begin{titlepage}
 \begin{fullwidth}
@@ -257,11 +259,11 @@ under the License.\index{license}
 
 \cleardoublepage
 \chapter*{Introduction} % The asterisk leaves out this chapter from the table of contents
-
+\begin{fullwidth}
 The \textbf{U}nified \textbf{F}ramework \textbf{F}or \textbf{E}lectric \textbf{M}achine \textbf{A}nalysis (UFFEMA) describes with parameters the geometries found in electric machines. Although it would be unrealistic cover all possible shapes or all small details that creative designers put into their models when trying to enhance specific machine behaviours, this document will try to gather the most common geometries of the most common rotating electric machines.
 
 This reference should become a living document that will be incorporating features and evolving such as electric machines have done it since their conception. The present manual corresponds to UFFEMA software version \uffemaVersion.  
-
+\end{fullwidth}
 \begin{figure*}[h]
 \includegraphics[width=\linewidth]{Overview.pdf}
 \caption{ Composition of rotating electric machines 
@@ -271,9 +273,9 @@ This reference should become a living document that will be incorporating featur
 \end{figure*}
 
 Throughout this document, rotating electric machines will be referred simply as electric machines, so the perspicacious readers will probably complain on that terminology since linear machines or transformers are not treated here.  Hence, we apologise for appropriating the definition.     
-
+\begin{fullwidth}
 The abstraction of Figure \ref{fig:overview} shows the first level of simplicity of electric machines and the sort of relationships will be found along this manual. From this definition, a \textit{RotatingMachine} must have one or more \textit{Rotor}, \textit{Stator} as well as \textit{Flux}. Either \textit{Rotor} or \textit{Stator} might be of \textit{Inner}, \textit{Middle} or \textit{Outer} construction.
-
+\end{fullwidth}
  \begin{figure*}[h]
  \includegraphics[width=\linewidth]{RotatingMachine.pdf}
  \caption{Classification of rotating electric machines 
@@ -305,31 +307,35 @@ An excerpt of the classification is shown in Figure \ref{fig:fullfig}, each chap
 %----------------------------------------------------------------------------------------
 
 \chapter{Installation}
-\label{ch:1}
+\label{ch:installation}
 
 \section{How to Get UFFEMA}
+\begin{fullwidth}
 The source code of UFFEMA is available for free download from its repository in GitHub at \url{https://github.com/ajpina/uffema} and is licensed under the Apache License, Version 2.0. Repository can be cloned as follows,
+\end{fullwidth}
 
 \begin{lstlisting}[language=bash, escapeinside=@@]
 $ git clone  @https://github.com/ajpina/uffema@
 \end{lstlisting}
 
 \section{Requirements}
+\begin{fullwidth}
 A rotating machine is set through a configuration file. The framework is being developed with Python 3.6 and configuration files must be in JSON format. The following dependences need to be met in order to run UFFEMA:
-
+\end{fullwidth}
 \begin{itemize}
 \item Python 3.6
 \item Numpy 1.13
 \end{itemize}
 
 \section{Running UFFEMA}
+\begin{fullwidth}
 Being a framework, UFFEMA does not have graphical interface and the only output that produces is a python object that contains information regarding geometry, materials and connection of a rotating electric machine. As such, the objects are intended to be embedded in your own python code. However, a command-line-based  program is included to test the installation. The program reads an electric machine definition file in JSON format and prints a string version of the python object created. The input files are usually given with extension '\textbf{.msf}' (machine settings file) even though there is no need to specify the extension, it helps to keep the machines organized in the working folder. 
-
+\end{fullwidth}
 \begin{lstlisting}[language=bash]
-$ uffema-tester options [filename]
+$ uffema-test options [filename]
 \end{lstlisting}
 
-The following options are currently supported by \textbf{\texttt{uffema-tester}}:
+The following options are currently supported by \textbf{\texttt{uffema-test}}:
  \begin{description}[leftmargin=1cm, style=nextline]
 \item [{\normalfont\ttfamily{\textbf{-v}}}]  \hfil \newline Prints the version.
  \item [{\normalfont\ttfamily{\textbf{-f}}}]  {\ttfamily{filename}} \\ Reads the machine settings file and creates a python instance. 					
@@ -340,118 +346,61 @@ The following options are currently supported by \textbf{\texttt{uffema-tester}}
 %----------------------------------------------------------------------------------------
 
 \chapter{Rotating Machines}
-\label{ch:1}
-
-A rotating machine is set through a configuration file. The framework is being developed with Python 3.6 and configuration files must be JSON format. 
-
+\label{ch:rotating_machines}
+\begin{fullwidth}
+A rotating machine is set through a configuration file. The framework is being developed with Python 3.6 and configuration files must be in JSON format. In general, an electric machine consists of a stator and a rotor, this section of the manual deals with the stator's configuration, which is very similar in conventional machines. A separated chapter will be added in order to address stators of such machines that does not fit into this category, for instance, recent developments have aimed to insert permanent magnets or field windings into the stator. 
+\end{fullwidth}
 \begin{figure*}[h]
-\includegraphics[width=\linewidth]{PermanentMagnet.pdf}
-\caption{This graph shows $y = \sin x$ from about $x = [-10, 10]$.
-\emph{Notice that this figure takes up the full page width.}}
-\label{fig:fullfig}
+\includegraphics[width=\linewidth]{Stator.pdf}
+\caption{Stator architecture.}
+\label{fig:stator}
 \end{figure*}
-%------------------------------------------------
+
+Several chapters are included in this manual in order to explain each type of machine technology. Moreover, the rotor architecture is let to be explained in those chapters since its geometry is mostly defined by the type of rotating machine. 
 
 \section{Stator}
-
-\subsection{Slots}
-
-\subsection{Windings}
-
-\section{Rotor}
-
 \begin{fullwidth}
-\lipsum[5]
+As can be seen in Figure \ref{fig:stator}, at least one stator is found in a rotating machine and is characterized by having slots, windings in its slots, as well as made of a material (usually soft magnetic). The parameters recognized by UFFEMA are as follows,
 \end{fullwidth}
+\begin{description}[leftmargin=4cm, style=nextline]
+\item[\normalfont{\ttfamily{\textbf{type}}: \textit{String}}] Type of stator, for instance, \textit{standardouter}, \textit{standardinner}, etc.
+\item[\normalfont{\ttfamily{\textbf{oSr}}: \textit{Float}}] Stator outer radius.
+\item[\normalfont{\ttfamily{\textbf{iSr}}: \textit{Float}}] Stator inner radius.
+\item[\normalfont{\ttfamily{\textbf{Ns}}: \textit{Integer}}] Number of slots.
+\item[\normalfont{\ttfamily{\textbf{Sl}}: \textit{Float}}] Length of stator stack.
+\item[\normalfont{\ttfamily{\textbf{slots}}: \textit{Object}}] Settings for stator slots according to object detailed in chapter \ref{ch:slots}.
+\item[\normalfont{\ttfamily{\textbf{material}}: \textit{Object}}] Settings for stator material according to object detailed in chapter \ref{ch:material}.
+\item[\normalfont{\ttfamily{\textbf{winding}}: \textit{Object}}] Settings for stator windings according to object detailed in chapter \ref{ch:windings}.
+\end{description}
 
-\subsection{Subsection 1}
+The example for the settings file in JSON format is given below,
 
-\lipsum[6-7]
-
-\subsection{Subsection 2}
-
-\lipsum[7-8]
-
-
-\newthought{Example of} the \texttt{newthought} command for starting new sections. Typography examples: \allcaps{all caps} and \smallcaps{small caps}.
-
-%------------------------------------------------
-
-\section{Synchronous}
-
-\section{Asynchronous}
-
-\section{DC}
-
-\lipsum[1] 
-
-\begin{marginfigure}
-\includegraphics[width=\linewidth]{Overview.pdf}
-\caption{This is a margin figure. The helix is defined by $x = \cos(2\pi z)$, $y = \sin(2\pi z)$, and $z = [0, 2.7]$. The figure was drawn using Asymptote (\url{http://asymptote.sf.net/}).}
-\label{fig:marginfig}
-\end{marginfigure}
-
-\lipsum[2]
-
-
-
-\lipsum[3]
-
-%------------------------------------------------
-
-\section{Tables} \marginnote{This is a random margin note. Notice that there isn't a number preceding the note, and there is no number in the main text where this note was written. Use \texttt{sidenote} to use a number.}
-
-\lipsum[4]
-
-\begin{table} % Add the following just after the closing bracket on this line to specify a position for the table on the page: [h], [t], [b] or [p] - these mean: here, top, bottom and on a separate page, respectively
-\centering % Centers the table on the page, comment out to left-justify
-\begin{tabular}{l c c c c c} % The final bracket specifies the number of columns in the table along with left and right borders which are specified using vertical bars (|); each column can be left, right or center-justified using l, r or c. To specify a precise width, use p{width}, e.g. p{5cm}
-\toprule % Top horizontal line
-& \multicolumn{5}{c}{Growth Media} \\ % Amalgamating several columns into one cell is done using the \multicolumn command as seen on this line
-\cmidrule(l){2-6} % Horizontal line spanning less than the full width of the table - you can add (r) or (l) just before the opening curly bracket to shorten the rule on the left or right side
-Strain & 1 & 2 & 3 & 4 & 5\\ % Column names row
-\midrule % In-table horizontal line
-GDS1002 & 0.962 & 0.821 & 0.356 & 0.682 & 0.801\\ % Content row 1
-NWN652 & 0.981 & 0.891 & 0.527 & 0.574 & 0.984\\ % Content row 2
-PPD234 & 0.915 & 0.936 & 0.491 & 0.276 & 0.965\\ % Content row 3
-JSB126 & 0.828 & 0.827 & 0.528 & 0.518 & 0.926\\ % Content row 4
-JSB724 & 0.916 & 0.933 & 0.482 & 0.644 & 0.937\\ % Content row 5
-\midrule % In-table horizontal line
-\midrule % In-table horizontal line
-Average Rate & 0.920 & 0.882 & 0.477 & 0.539 & 0.923\\ % Summary/total row
-\bottomrule % Bottom horizontal line
-\end{tabular}
-\caption{Table caption text} % Table caption, can be commented out if no caption is required
-\label{tab:template} % A label for referencing this table elsewhere, references are used in text as \ref{label}
-\end{table}
-
-
-%------------------------------------------------
-
-\section{Section 2}
-
-\subsection{Subsection 1}
-
-\lipsum[9-10]
-
-\subsection{Subsection 2}
-
-\lipsum[11-12]
-
-%----------------------------------------------------------------------------------------
-%	CHAPTER 2
-%----------------------------------------------------------------------------------------
+\begin{lstlisting}[language=json]
+{
+	 "machine" : {
+    	"type" : String,
+    	"stator" : {
+      		"type" :  String,
+     		"oSr" : Float,
+      		"iSr" : Float,
+      		"Ns" : Integer,
+      		"Sl" : Float,
+      		"slots" : {...},
+      		"material" : {...},
+      		"winding" : {...}
+		},
+}
+\end{lstlisting}
 
 \chapter{Slots}
 \label{ch:slots}
-
-The number of slots where the conductors are to be inserted are defined in the parent component, either stator or rotor. However, the "slots" object must contain type and dimension, as follows:
+\begin{fullwidth}
+The number of slots where the conductors are to be inserted are defined in the parent component, either stator or rotor. However, the "slots" object must contain type and dimension. Additional parameters for the position of slots on the parent component, for instance, \texttt{\textbf{SOpos}} and \texttt{\textbf{Spos}} are inserted in the \texttt{\textbf{dimension}} field. These are angles for the placement of slot openings and coil regions, respectively. Even though these might be calculated most of the cases with the total number of slots, are particularly useful for an asymmetrical arrangement. 
+\end{fullwidth}
 \begin{description}[leftmargin=4cm, style=nextline]
 \item[\normalfont{\ttfamily{\textbf{type}}: \textit{String}}] Type of slot, for instance, \textit{type$0$}, \textit{type$1$}, etc.
 \item[\normalfont{\ttfamily{\textbf{dimension}}: \textit{Array}}] List of parameters that define the geometry according with its \texttt{\textbf{type}}.
 \end{description}
-
-Additional parameters for the position of slots on the parent component, for instance, \texttt{\textbf{SOpos}} and \texttt{\textbf{Spos}} are inserted in the \texttt{\textbf{dimension}} field. These are angles for the placement of slot openings and coil regions, respectively. Even though these might be calculated most of the cases with the total number of slots, are particularly useful for an asymmetrical arrangement. 
 
 \begin{lstlisting}[language=json]
 "slots" : {
@@ -527,6 +476,95 @@ The following parameters set forth slot opening and coil regions for slots type 
 \end{description}
 
 
+
+\chapter{Windings}\label{ch:windings}
+
+
+
+
+\newthought{Example of} the \texttt{newthought} command for starting new sections. Typography examples: \allcaps{all caps} and \smallcaps{small caps}.
+
+%------------------------------------------------
+
+\chapter{Permanent Magnet Synchronous Machines}
+\label{ch:1}
+
+A rotating machine is set through a configuration file. The framework is being developed with Python 3.6 and configuration files must be in JSON format. 
+
+\begin{figure*}[h]
+\includegraphics[width=\linewidth]{Rotor_PermanentMagnet.pdf}
+\caption{This graph shows $y = \sin x$ from about $x = [-10, 10]$.
+\emph{Notice that this figure takes up the full page width.}}
+\label{fig:fullfig}
+\end{figure*}
+
+\section{Synchronous}
+
+\section{Asynchronous}
+
+\section{DC}
+
+\lipsum[1] 
+
+\begin{marginfigure}
+\includegraphics[width=\linewidth]{Overview.pdf}
+\caption{This is a margin figure. The helix is defined by $x = \cos(2\pi z)$, $y = \sin(2\pi z)$, and $z = [0, 2.7]$. The figure was drawn using Asymptote (\url{http://asymptote.sf.net/}).}
+\label{fig:marginfig}
+\end{marginfigure}
+
+\lipsum[2]
+
+
+
+\lipsum[3]
+
+%------------------------------------------------
+
+\section{Tables} \marginnote{This is a random margin note. Notice that there isn't a number preceding the note, and there is no number in the main text where this note was written. Use \texttt{sidenote} to use a number.}
+
+\lipsum[4]
+
+\begin{table} % Add the following just after the closing bracket on this line to specify a position for the table on the page: [h], [t], [b] or [p] - these mean: here, top, bottom and on a separate page, respectively
+\centering % Centers the table on the page, comment out to left-justify
+\begin{tabular}{l c c c c c} % The final bracket specifies the number of columns in the table along with left and right borders which are specified using vertical bars (|); each column can be left, right or center-justified using l, r or c. To specify a precise width, use p{width}, e.g. p{5cm}
+\toprule % Top horizontal line
+& \multicolumn{5}{c}{Growth Media} \\ % Amalgamating several columns into one cell is done using the \multicolumn command as seen on this line
+\cmidrule(l){2-6} % Horizontal line spanning less than the full width of the table - you can add (r) or (l) just before the opening curly bracket to shorten the rule on the left or right side
+Strain & 1 & 2 & 3 & 4 & 5\\ % Column names row
+\midrule % In-table horizontal line
+GDS1002 & 0.962 & 0.821 & 0.356 & 0.682 & 0.801\\ % Content row 1
+NWN652 & 0.981 & 0.891 & 0.527 & 0.574 & 0.984\\ % Content row 2
+PPD234 & 0.915 & 0.936 & 0.491 & 0.276 & 0.965\\ % Content row 3
+JSB126 & 0.828 & 0.827 & 0.528 & 0.518 & 0.926\\ % Content row 4
+JSB724 & 0.916 & 0.933 & 0.482 & 0.644 & 0.937\\ % Content row 5
+\midrule % In-table horizontal line
+\midrule % In-table horizontal line
+Average Rate & 0.920 & 0.882 & 0.477 & 0.539 & 0.923\\ % Summary/total row
+\bottomrule % Bottom horizontal line
+\end{tabular}
+\caption{Table caption text} % Table caption, can be commented out if no caption is required
+\label{tab:template} % A label for referencing this table elsewhere, references are used in text as \ref{label}
+\end{table}
+
+
+%------------------------------------------------
+
+\section{Section 2}
+
+\subsection{Subsection 1}
+
+\lipsum[9-10]
+
+\subsection{Subsection 2}
+
+\lipsum[11-12]
+
+%----------------------------------------------------------------------------------------
+%	CHAPTER 2
+%----------------------------------------------------------------------------------------
+
+
+\chapter{Material}\label{ch:material}
 
 
 
