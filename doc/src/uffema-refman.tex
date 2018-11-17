@@ -478,51 +478,194 @@ The following parameters set forth slot opening and coil regions for slots type 
 
 
 \chapter{Windings}\label{ch:windings}
+\begin{fullwidth}
+Windings consist of conductors that are conventionally inserted in the stator although there exist machines such as synchronous generator and induction motors, to name a few, where field windings and rotor bars can also be deemed as windings. 
+Conductors are inserted into slots and overall coils can be arranged in multiple ways. In the current version of UFFEMA, windings can be distributed or concentrated and embedded in a layered manner.
+The following fields can be used to define the windings.   
+\end{fullwidth}
 
 
 
+\begin{description}[leftmargin=4cm, style=nextline]
+\item[\normalfont{\ttfamily{\textbf{material}}: \textit{Object}}] Settings for conductor material according to object detailed in chapter \ref{ch:material}.
+\item[\normalfont{\ttfamily{\textbf{Layers}}: \textit{Integer}}] Number of layers that will be arranged in the slots according with its \texttt{\textbf{LayersType}}.
+\item[\normalfont{\ttfamily{\textbf{LayersType}}: \textit{String}}] Type of arrangement in the slots, i.e., \texttt{\textit{sidebyside}} or \texttt{\textit{topbottom}}, as long as layer number is even.
+\item[\normalfont{\ttfamily{\textbf{type}}: \textit{String}}] Winding coils arrangement, i.e., \texttt{\textit{concentrated}} or \texttt{\textit{distributed}}.
 
-\newthought{Example of} the \texttt{newthought} command for starting new sections. Typography examples: \allcaps{all caps} and \smallcaps{small caps}.
+\begin{marginfigure}
+\includegraphics[width=4cm]{winding_twolayer_sidebyside.pdf}
+\caption{Two layers, side by side coils.}
+\label{fig:winding_twolayer_sidebyside}
+\end{marginfigure}
+
+
+\item[\normalfont{\ttfamily{\textbf{Conn}}: \textit{String}}] Type of winding connection, i.e., \texttt{\textit{wye}} or \texttt{\textit{delta}}.
+\item[\normalfont{\ttfamily{\textbf{NoPhases}}: \textit{Integer}}] Number of phases.
+\item[\normalfont{\ttfamily{\textbf{Cseries}}: \textit{Integer}}] Number of coils in series.
+\item[\normalfont{\ttfamily{\textbf{Cparallel}}: \textit{Integer}}] Number of coils in parallel.
+\item[\normalfont{\ttfamily{\textbf{Cturns}}: \textit{Integer}}] Number of turns per coil.
+\item[\normalfont{\ttfamily{\textbf{wih}}: \textit{Integer}}] Number of wires in hand or stranded conductors.
+\item[\normalfont{\ttfamily{\textbf{condDiam}}: \textit{Float}}] Conductor diameter.
+\item[\normalfont{\ttfamily{\textbf{Cpitch}}: \textit{Integer}}] Coil pitch.
+\item[\normalfont{\ttfamily{\textbf{CM}}: \textit{Array}}] Connection matrix, it is a list of parameters that define what conductors are inserted into the slots.
+\end{description}
+
+The connection matrix generally has dimension \textbf{Ns} by \textbf{NoPhases} for each coil side. There can be from zero to several coil sides within a slot. For instance, Figures \ref{fig:winding_onelayer}-\ref{fig:winding_fourlayer} show one coil side which refers to split a slot into two parts side by side. Therefore, the conductor area in the figures are symmetrical with respect to the leftmost vertical line.
+
+
+\begin{marginfigure}
+\includegraphics[width=4cm]{winding_onelayer.pdf}
+\caption{One layer coils.}
+\label{fig:winding_onelayer}
+\end{marginfigure}
+
+\begin{lstlisting}[language=json]
+"winding" : {
+	"material" :  {...},
+	"Layers" : Integer,
+	"LayersType" : String,
+	"type" : String,
+	"Conn" : String,
+	"NoPhases" : Integer,
+	"Cseries" : Integer,
+	"Cparallel" : Integer,
+	"Cturns" : Integer,
+	"wih" : Integer,
+	"condDiam" : Float,
+	"Cpitch" : Integer,
+	"CM" : {
+		"CM1" : [
+			{"Phase" : Value, ... },
+            ...
+          ],
+          "CM2" : [
+          	{"Phase" : Value, ... },
+          	...
+          ]
+	 }
+}
+\end{lstlisting}
+
+
+\begin{marginfigure}
+\includegraphics[width=4cm]{winding_twolayer_topbottom.pdf}
+\caption{Two layer, top and bottom coils.}
+\label{fig:winding_twolayer_topbottom}
+\end{marginfigure}
+
+
+For the connection matrix to be defined, coil sides \textbf{CM\#} need to be listed and each one consists of conductors belonging to the machine phases. Phases are \textbf{A} to  \textbf{F} to denote one-phase to six-phases machine, respectively. Additionally, a value of $1$ means current flowing positively perpendicular to the machine plane, namely +Z if it's assumed that geometry sits on XY-plane. On the contrary, $-1$ will indicate negative current going into -Z direction.   
+ 
+\section[One Layer]{One Layer}
+Figure \ref{fig:winding_onelayer} shows points, lines and loops in order to build surfaces if the geometry is to be meshed. The conductor area results of merging the inner rectangle of both slot sides, whilst the outer one defines slot liner or insulation area. As a result, connection matrix requires only one coil side to be set.
+
+\section[Two Layers - Side by Side]{Two Layers - Side by Side}
+Figure \ref{fig:winding_twolayer_sidebyside} shows points, lines and loops in order to build surfaces if the geometry is to be meshed. The conductor area will not be merged to its mirror, therefore the connection matrix needs the two coil sides since each conductor area might belong to different phase. The outer rectangle defines slot liner or insulation area.
+
+\section[Two Layers - Top and Bottom]{Two Layers - Top and Bottom}
+Figure \ref{fig:winding_twolayer_topbottom} shows points, lines and loops in order to build surfaces if the geometry is to be meshed. Analogous to previous configuration, with the difference that conductor areas are arranged vertically and will be merged to its mirror. Connection matrix and insulation area remain same as before.
+
+\section[Four Layers]{Four Layers}
+TO-DO
+
+
+\begin{marginfigure}
+\includegraphics[width=4cm]{winding_fourlayer.pdf}
+\caption{Four layer coils.}
+\label{fig:winding_fourlayer}
+\end{marginfigure}
 
 %------------------------------------------------
 
 \chapter{Permanent Magnet Synchronous Machines}
-\label{ch:1}
-
-A rotating machine is set through a configuration file. The framework is being developed with Python 3.6 and configuration files must be in JSON format. 
+\label{ch:pmsm}
+\begin{fullwidth}
+Rotor configuration mostly defines the type of electric machine, for instance, a permanent magnet synchronous machine consists of at least one rotor with magnets, pockets (none if SPM) and a material which rotor is made of. Figure \ref{fig:pmsm} shows that UFFEMA defines a Permanent Magnet machines with a rotor that can be of type IPM or SPM. Several subcategories are implemented for each and set forth in the following sections. 
+\end{fullwidth}
 
 \begin{figure*}[h]
 \includegraphics[width=\linewidth]{Rotor_PermanentMagnet.pdf}
-\caption{This graph shows $y = \sin x$ from about $x = [-10, 10]$.
-\emph{Notice that this figure takes up the full page width.}}
-\label{fig:fullfig}
+\caption{Configuration of permanent magnet synchronous machines.}
+\label{fig:pmsm}
 \end{figure*}
 
-\section{Synchronous}
+\section{Rotor}
+\begin{fullwidth}
+As can be seen in Figure \ref{fig:pmsm}, at least one rotor is found in a rotating machine and is generally  characterized by having dimensions, pole pairs and material. The rest of parameters that describe magnet and magnet pockets features depends on each particular type of rotor configuration. The parameters recognized by UFFEMA are as follows,
+\end{fullwidth}
+\begin{description}[leftmargin=4cm, style=nextline]
+\item[\normalfont{\ttfamily{\textbf{type}}: \textit{String}}] Type of rotor, for instance, \textit{spm0}, \textit{ipm0}, etc.
+\item[\normalfont{\ttfamily{\textbf{oRr}}: \textit{Float}}] Rotor outer radius.
+\item[\normalfont{\ttfamily{\textbf{iRr}}: \textit{Float}}] Rotor inner radius.
+\item[\normalfont{\ttfamily{\textbf{pp}}: \textit{Integer}}] Number of pole pairs.
+\item[\normalfont{\ttfamily{\textbf{Rl}}: \textit{Float}}] Length of rotor stack.
+\item[\normalfont{\ttfamily{\textbf{magnets}}: \textit{Object}}] Settings for rotor magnets according to type of rotor.
+\item[\normalfont{\ttfamily{\textbf{material}}: \textit{Object}}] Settings for rotor material according to object detailed in chapter \ref{ch:material}.
+\item[\normalfont{\ttfamily{\textbf{pockets}}: \textit{Object}}] Settings for magnet pockets according to type of rotor.
+\end{description}
 
-\section{Asynchronous}
 
-\section{DC}
 
-\lipsum[1] 
+The example for the settings file in JSON format is given below,
+
+\begin{lstlisting}[language=json]
+{
+	 "machine" : {
+    	"type" : String,
+    	"rotor" : {
+      		"type" :  String,
+     		"oRr" : Float,
+      		"iRr" : Float,
+      		"pp" : Integer,
+      		"Rl" : Float,
+      		"magnets" : {...},
+      		"pockets" : {...},
+      		"material" : {...}
+		},
+}
+\end{lstlisting}
 
 \begin{marginfigure}
-\includegraphics[width=\linewidth]{Overview.pdf}
-\caption{This is a margin figure. The helix is defined by $x = \cos(2\pi z)$, $y = \sin(2\pi z)$, and $z = [0, 2.7]$. The figure was drawn using Asymptote (\url{http://asymptote.sf.net/}).}
-\label{fig:marginfig}
+\includegraphics[width=\linewidth]{SPM_0_parameters.pdf}
+\caption{Parameters for rotor of surface permanent magnet motor type $0$.}
+\label{fig:spm0_parameters}
 \end{marginfigure}
 
-\lipsum[2]
+\section{Rotor Types}
+Rotor type is tightly linked to magnet and pocket type. Hence, the next sections, that deal with type of permanent magnet rotors currently supported by UFFEMA, includes their own definition for its magnets and pockets.
+\subsection{SPM Type $0$}
+The following parameters set forth magnet settings for surface permanent magnet machines with rotor type $0$ (spm$0$), according to Figure \ref{fig:spm0_parameters} and \ref{fig:spm0}. Notice that this geometry does not require to include any magnet pocket settings. The latter figure shows points, lines and loops in order to build surfaces if the geometry is to be meshed. Settings for rotor material and magnet material are according to object detailed in chapter \ref{ch:material}. This type of rotor only supports \textit{arc} magnets and these should be defined as follows:
 
 
+\begin{description}[leftmargin=4.5cm, style=nextline]
+\item[\normalfont{\ttfamily{\textbf{type}}: \textit{String}}] Magnet type, i.e., \textit{arc}.
+\item[\normalfont{\ttfamily{\textbf{magnetisation}}: \textit{String}}] Type of magnetisation, i.e., \textit{parallel}, \textit{radial}, \textit{halbach}, etc.
+\item[\normalfont{\ttfamily{\textbf{material}}: \textit{Object}}] Settings according to object detailed in chapter \ref{ch:material}.
+\item[\normalfont{\ttfamily{\textbf{dimension}}: \textit{Array}}] List of parameters that defines geometry for each magnet..
+\end{description}
 
-\lipsum[3]
+\begin{marginfigure}
+\includegraphics[width=\linewidth]{SPM_0.pdf}
+\caption{Rotor of surface permanent magnet motor type $0$. Points, lines and loops.}
+\label{fig:spm0}
+\end{marginfigure}
 
-%------------------------------------------------
 
-\section{Tables} \marginnote{This is a random margin note. Notice that there isn't a number preceding the note, and there is no number in the main text where this note was written. Use \texttt{sidenote} to use a number.}
+The length of the array \textbf{dimension} must be twice the value of \textbf{pp}, which allows to define an asymmetrical geometry being each magnet independently set. The parameters for magnets of type \textit{arc} are:
 
-\lipsum[4]
+\begin{description}[leftmargin=4.5cm, style=nextline]
+\item[\normalfont{\ttfamily{\textbf{Ml}}: \textit{Float}}] Magnet thickness, or magnet length measured radially.
+\item[\normalfont{\ttfamily{\textbf{Mw}}: \textit{Float}}] Magnet width.
+\item[\normalfont{\ttfamily{\textbf{Mps}}: \textit{Float}}] Pole shaping ratio, between $0$ and $1$. It scales accordingly the magnet length (\texttt{\textbf{Ml}}) at the sides.
+\item[\normalfont{\ttfamily{\textbf{iMr}}: \textit{Float}}] Radius of magnet inner arc, for \texttt{\textit{spm0}}, this value should be the same as  \texttt{\textbf{oRr}}.
+\item[\normalfont{\ttfamily{\textbf{delta}}: \textit{Float}}] Angle to tangentially shift magnets from their centre.
+\end{description}
+
+
+\subsection{IPM Type $0$}
+
+Implemented, but documentation will be added shortly.
+
 
 \begin{table} % Add the following just after the closing bracket on this line to specify a position for the table on the page: [h], [t], [b] or [p] - these mean: here, top, bottom and on a separate page, respectively
 \centering % Centers the table on the page, comment out to left-justify
@@ -547,26 +690,10 @@ Average Rate & 0.920 & 0.882 & 0.477 & 0.539 & 0.923\\ % Summary/total row
 \end{table}
 
 
-%------------------------------------------------
-
-\section{Section 2}
-
-\subsection{Subsection 1}
-
-\lipsum[9-10]
-
-\subsection{Subsection 2}
-
-\lipsum[11-12]
-
-%----------------------------------------------------------------------------------------
-%	CHAPTER 2
-%----------------------------------------------------------------------------------------
-
-
 \chapter{Material}\label{ch:material}
 
-
+\chapter{Examples}\label{ch:examples}
+\section{spm0.msf}
 
 %----------------------------------------------------------------------------------------
 
