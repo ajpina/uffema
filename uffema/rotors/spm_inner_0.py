@@ -139,3 +139,8 @@ class SPM0(Rotor):
 
     def get_sliding_boundary(self):
         return [507]
+
+    def __str__(self):
+        output = "\t\tPole Pairs= " + str(self.pp) + "\n"
+        output = output + self.magnets[0].__str__()
+        return Rotor.__str__(self) + output

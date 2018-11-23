@@ -114,3 +114,8 @@ class Rotor(metaclass=ABCMeta):
             from uffema.rotors import PMStandardInnerRotor
             rotor_instance = PMStandardInnerRotor(rotor_settings)
         return rotor_instance
+
+    def __str__(self):
+        output = "\tRotor Characteristics:\n"
+        output = output + "\t\t" + self.type + "\n"
+        return output

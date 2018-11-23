@@ -153,3 +153,12 @@ class Stator(metaclass=ABCMeta):
         Phresistance = ( self._winding._Cseries * Cresistance /
                          self._winding._Cparallel )
         return Cresistance, Phresistance
+
+    def __str__(self):
+        output = "\tStator Characteristics:\n"
+        output = output + "\t\t" + self.type + "\n"
+        output = output + "\t\tSlots= " + str(self.slots_number) + "\n"
+        output = output + self.slots[0].__str__()
+        output = output + self.winding.__str__()
+
+        return output

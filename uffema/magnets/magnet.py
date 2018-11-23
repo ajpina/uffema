@@ -80,3 +80,5 @@ class Magnet(metaclass=ABCMeta):
             magnet_instance = ArcMagnet(magnets_settings, magnetisation, material_settings)
         return magnet_instance
 
+    def __str__(self):
+        return "\t\t" + self.type + "\n"

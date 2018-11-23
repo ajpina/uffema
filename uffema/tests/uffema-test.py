@@ -76,10 +76,16 @@ def main(argv=None):
     if filename is None:
         raise Usage("algo")
 
+    print("\nLoading File...")
+
     with open(filename) as msf:
         machine_settings = json.load(msf)
-    spm = RotatingMachine.create(machine_settings['machine'])
-    print(spm)
+    
+    print("Machine Initialisation..")
+    rm = RotatingMachine.create(machine_settings['machine'])
+    print(rm)
+    print("Process Finished")
+    print("Rotating Machine Successfully created!\n")
     return 1
 
 

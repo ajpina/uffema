@@ -125,3 +125,6 @@ class StandardOuterStator(Stator):
 
     def get_airgap_arc(self):
         return self.airgap_arc
+
+    def __str__(self):
+        return Stator.__str__(self)

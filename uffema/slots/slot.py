@@ -84,3 +84,6 @@ class Slot(metaclass=ABCMeta):
     def get_slot_center(self):
         return 'Should never see this'
 
+    def __str__(self):
+        output = "\t\t" + self.type + "\n"
+        return output

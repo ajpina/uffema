@@ -69,7 +69,7 @@
   \lstset{%
     language=bash,
     basicstyle=\normalfont\ttfamily\footnotesize,
-    otherkeywords={=, +, [, ], (, ), \{, \}, *},
+    otherkeywords={=, +, [, ], (, ), \{, \}, *, <, >, python},
     % bash commands from:
     %http://www.math.montana.edu/Rweb/Rhelp/00Index.html
     emph={git, clone, uffema,test},
@@ -90,20 +90,12 @@
     showstringspaces=false,
     breaklines=true,
     frame=lines,
-    otherkeywords={Float, String, Integer},
+    otherkeywords={Float, String, Integer,null},
+     emph={machine,type,stator,oSr,iSr,Ns,Sl,slots,dimension,SOpos,Spos,h0,h1,h2,h3,w0,w1,w2,material, name,BHcurve,B,H,resistivity,winding,Layers,LayersType,Conn,NoPhases,Cseries,Cparallel,Cturns,wih,condDiam,Cpitch,A,C,D,E,F,CM,CM1,CM2,rotor,oRr,iRr,pp,Rl,magnets,pockets,magnetisation,Br,mur,Ml,Mw,Mps,iMr,delta},
     keywordstyle=\color{blue},
+    emphstyle=\color{violet}\bfseries,
     backgroundcolor=\color{lgray},
     literate=
-     *{0}{{{\color{numb}0}}}{1}
-      {1}{{{\color{numb}1}}}{1}
-      {2}{{{\color{numb}2}}}{1}
-      {3}{{{\color{numb}3}}}{1}
-      {4}{{{\color{numb}4}}}{1}
-      {5}{{{\color{numb}5}}}{1}
-      {6}{{{\color{numb}6}}}{1}
-      {7}{{{\color{numb}7}}}{1}
-      {8}{{{\color{numb}8}}}{1}
-      {9}{{{\color{numb}9}}}{1}
       {"}{{{\color{red}{"}}}}{1}
       {:}{{{\color{punct}{:}}}}{1}
       {,}{{{\color{punct}{,}}}}{1}
@@ -174,7 +166,7 @@
 	\vspace{2cm}
 	{\LARGE\flushright  REFERENCE MANUAL VERSION $\uffemaVersion$\par}
 	\vspace{7cm}
-	{\Large\itshape Dr. A. J. Pi\~{n}a Ortega\par}
+	{\Large\itshape A. J. Pi\~{n}a Ortega\par}
 
 	\vfill
 
@@ -209,7 +201,7 @@
 \thispagestyle{empty}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{\baselineskip}
-Copyright \copyright\ \the\year\ Dr. A. J. Pi\~{n}a Ortega
+Copyright \copyright\ \the\year\ A. J. Pi\~{n}a Ortega
 
 \par\smallcaps{Powered by UFFEMA DEVELOPERS}
 
@@ -228,7 +220,7 @@ under the License.\index{license}
 \end{fullwidth}
 
 %----------------------------------------------------------------------------------------
-
+\begin{fullwidth}
 \tableofcontents % Print the table of contents
 
 %----------------------------------------------------------------------------------------
@@ -238,7 +230,7 @@ under the License.\index{license}
 %----------------------------------------------------------------------------------------
 
 \listoftables % Print a list of tables
-
+\end{fullwidth}
 %----------------------------------------------------------------------------------------
 %	DEDICATION PAGE
 %----------------------------------------------------------------------------------------
@@ -332,7 +324,9 @@ A rotating machine is set through a configuration file. The framework is being d
 Being a framework, UFFEMA does not have graphical interface and the only output that produces is a python object that contains information regarding geometry, materials and connection of a rotating electric machine. As such, the objects are intended to be embedded in your own python code. However, a command-line-based  program is included to test the installation. The program reads an electric machine definition file in JSON format and prints a string version of the python object created. The input files are usually given with extension '\textbf{.msf}' (machine settings file) even though there is no need to specify the extension, it helps to keep the machines organized in the working folder. 
 \end{fullwidth}
 \begin{lstlisting}[language=bash]
-$ uffema-test options [filename]
+$ export PYTHONPATH=$PYTHONPATH:<directory>/uffema
+$ cd uffema/tests
+$ python uffema-test options [filename]
 \end{lstlisting}
 
 The following options are currently supported by \textbf{\texttt{uffema-test}}:
@@ -475,12 +469,19 @@ The following parameters set forth slot opening and coil regions for slots type 
 \item[\normalfont{\ttfamily{\textbf{h2}}: \textit{Float}}] Coil region height.
 \end{description}
 
+\section[Type 2]{Type $2$}
+TO-DO: Implemented and documentation will be added shortly.
 
+\section[Type 3]{Type $3$}
+TO-DO: Implemented and documentation will be added shortly.
+
+\section[Type 4]{Type $4$}
+TO-DO: Implemented and documentation will be added shortly.
 
 \chapter{Windings}\label{ch:windings}
 \begin{fullwidth}
 Windings consist of conductors that are conventionally inserted in the stator although there exist machines such as synchronous generator and induction motors, to name a few, where field windings and rotor bars can also be deemed as windings. 
-Conductors are inserted into slots and overall coils can be arranged in multiple ways. In the current version of UFFEMA, windings can be distributed or concentrated and embedded in a layered manner.
+Conductors are inserted into slots and overall coils can be arranged in multiple ways. In the current version of UFFEMA, windings can be distributed\index{distributed} or concentrated\index{concentrated} and embedded in a layered manner.
 The following fields can be used to define the windings.   
 \end{fullwidth}
 
@@ -565,17 +566,25 @@ Figure \ref{fig:winding_twolayer_sidebyside} shows points, lines and loops in or
 \section[Two Layers - Top and Bottom]{Two Layers - Top and Bottom}
 Figure \ref{fig:winding_twolayer_topbottom} shows points, lines and loops in order to build surfaces if the geometry is to be meshed. Analogous to previous configuration, with the difference that conductor areas are arranged vertically and will be merged to its mirror. Connection matrix and insulation area remain same as before.
 
-\section[Four Layers]{Four Layers}
-TO-DO
-
-
 \begin{marginfigure}
 \includegraphics[width=4cm]{winding_fourlayer.pdf}
 \caption{Four layer coils.}
 \label{fig:winding_fourlayer}
 \end{marginfigure}
 
-%------------------------------------------------
+
+\section[Three Layers]{Three Layers}
+TO-DO: No implemented yet.
+
+\section[Four Layers]{Four Layers}
+TO-DO: No implemented yet.
+
+\section[Multiple Layers]{Multiple Layers}
+TO-DO: No implemented yet.
+
+\section[Stranded Conductors]{Stranded Conductors}
+TO-DO: No implemented yet.
+
 
 \chapter{Permanent Magnet Synchronous Machines}
 \label{ch:pmsm}
@@ -662,38 +671,354 @@ The length of the array \textbf{dimension} must be twice the value of \textbf{pp
 \end{description}
 
 
-\subsection{IPM Type $0$}
+\section[SPM Type 1]{SPM Type $1$}
+TO-DO: Implemented and documentation will be added shortly.
 
-Implemented, but documentation will be added shortly.
+\subsection[IPM Type 0]{IPM Type $0$}
+TO-DO: Implemented and documentation will be added shortly.
 
-
-\begin{table} % Add the following just after the closing bracket on this line to specify a position for the table on the page: [h], [t], [b] or [p] - these mean: here, top, bottom and on a separate page, respectively
-\centering % Centers the table on the page, comment out to left-justify
-\begin{tabular}{l c c c c c} % The final bracket specifies the number of columns in the table along with left and right borders which are specified using vertical bars (|); each column can be left, right or center-justified using l, r or c. To specify a precise width, use p{width}, e.g. p{5cm}
-\toprule % Top horizontal line
-& \multicolumn{5}{c}{Growth Media} \\ % Amalgamating several columns into one cell is done using the \multicolumn command as seen on this line
-\cmidrule(l){2-6} % Horizontal line spanning less than the full width of the table - you can add (r) or (l) just before the opening curly bracket to shorten the rule on the left or right side
-Strain & 1 & 2 & 3 & 4 & 5\\ % Column names row
-\midrule % In-table horizontal line
-GDS1002 & 0.962 & 0.821 & 0.356 & 0.682 & 0.801\\ % Content row 1
-NWN652 & 0.981 & 0.891 & 0.527 & 0.574 & 0.984\\ % Content row 2
-PPD234 & 0.915 & 0.936 & 0.491 & 0.276 & 0.965\\ % Content row 3
-JSB126 & 0.828 & 0.827 & 0.528 & 0.518 & 0.926\\ % Content row 4
-JSB724 & 0.916 & 0.933 & 0.482 & 0.644 & 0.937\\ % Content row 5
-\midrule % In-table horizontal line
-\midrule % In-table horizontal line
-Average Rate & 0.920 & 0.882 & 0.477 & 0.539 & 0.923\\ % Summary/total row
-\bottomrule % Bottom horizontal line
-\end{tabular}
-\caption{Table caption text} % Table caption, can be commented out if no caption is required
-\label{tab:template} % A label for referencing this table elsewhere, references are used in text as \ref{label}
-\end{table}
+\subsection[IPM Type 1]{IPM Type $1$}
+TO-DO: Implemented and documentation will be added shortly.
 
 
 \chapter{Material}\label{ch:material}
+\begin{fullwidth}
+This object can be used to define either magnetic or non-magnetic materials. Most of its fields are explained below however it is noteworthy that not all of these are mandatory and should vary depending of the nature of material being defined.
+\end{fullwidth}
+
+\begin{description}[leftmargin=4cm, style=nextline]
+\item[\normalfont{\ttfamily{\textbf{name}}: \textit{String}}] Material identification.
+\item[\normalfont{\ttfamily{\textbf{BHcurve}}: \textit{Array}}] Values of \texttt{\textit{B}} and \texttt{\textit{H}} in order to define Induction curves.
+\item[\normalfont{\ttfamily{\textbf{resistivity}}: \textit{Float}}] Material resistivity.
+\item[\normalfont{\ttfamily{\textbf{Br}}: \textit{Float}}] Residual flux for hard magnetic materials..
+\item[\normalfont{\ttfamily{\textbf{mur}}: \textit{Float}}] Relative permeability.
+\end{description}
+
+The example for the settings file in JSON format is given below,
+
+\begin{lstlisting}[language=json]
+"material" : {
+ 	"name" : String,
+   	"BHcurve" : [
+     		{"B" : Float, "H" : Float },
+     		...
+     	],
+    	"resistivity" : Float,
+     	"Br" : Float,
+     	"mur" : Float
+}
+
+\end{lstlisting}
+
+
+
 
 \chapter{Examples}\label{ch:examples}
-\section{spm0.msf}
+Examples are available in the source code and located in the folder \textbf{uffema/tests}.
+
+\section[Motor 0]{File: motor\_$0$.msf}
+Surface permanent magnet motor. \marginnote{This example shows a fractional slot concentrated winding machine (FSCW) with nine slots, six poles and surface permanent magnet rotor. It is a inner rotor configuration of type \textit{spm0}, with Neodymium magnets, three-phase winding and steel M80065A.}
+
+\begin{lstlisting}[language=json]
+{
+  "machine" : {
+    "type" : "spm",
+    "stator" : {
+      "type" : "standardouter",
+      "oSr" : 42.5e-3,
+      "iSr" : 18.98e-3,
+      "Ns" : 9,
+      "Sl" : 36.5e-3,
+      "slots" : {
+        "type": "type0",
+        "dimension": [
+          {
+            "SOpos": 20.0,
+            "Spos": 20.0,
+            "h0": 0.89e-3,
+            "h1": 1.5e-3,
+            "h2": 18.5e-3,
+            "h3": 1e-3,
+            "w0": 2.55e-3,
+            "w1": 6.4e-3,
+            "w2": 16.4e-3
+          },
+          {
+            "SOpos": 60.0,
+            "Spos": 60.0,
+            "h0": 0.89e-3,
+            "h1": 1.5e-3,
+            "h2": 18.5e-3,
+            "h3": 1e-3,
+            "w0": 2.55e-3,
+            "w1": 6.4e-3,
+            "w2": 16.4e-3
+          },
+          {
+            "SOpos": 100.0,
+            "Spos": 100.0,
+            "h0": 0.89e-3,
+            "h1": 1.5e-3,
+            "h2": 18.5e-3,
+            "h3": 1e-3,
+            "w0": 2.55e-3,
+            "w1": 6.4e-3,
+            "w2": 16.4e-3
+          },
+          {
+            "SOpos": 140.0,
+            "Spos": 140.0,
+            "h0": 0.89e-3,
+            "h1": 1.5e-3,
+            "h2": 18.5e-3,
+            "h3": 1e-3,
+            "w0": 2.55e-3,
+            "w1": 6.4e-3,
+            "w2": 16.4e-3
+          },
+          {
+            "SOpos": 180.0,
+            "Spos": 180.0,
+            "h0": 0.89e-3,
+            "h1": 1.5e-3,
+            "h2": 18.5e-3,
+            "h3": 1e-3,
+            "w0": 2.55e-3,
+            "w1": 6.4e-3,
+            "w2": 16.4e-3
+          },
+          {
+            "SOpos": 220.0,
+            "Spos": 220.0,
+            "h0": 0.89e-3,
+            "h1": 1.5e-3,
+            "h2": 18.5e-3,
+            "h3": 1e-3,
+            "w0": 2.55e-3,
+            "w1": 6.4e-3,
+            "w2": 16.4e-3
+          },
+          {
+            "SOpos": 260.0,
+            "Spos": 260.0,
+            "h0": 0.89e-3,
+            "h1": 1.5e-3,
+            "h2": 18.5e-3,
+            "h3": 1e-3,
+            "w0": 2.55e-3,
+            "w1": 6.4e-3,
+            "w2": 16.4e-3
+          },
+          {
+            "SOpos": 300.0,
+            "Spos": 300.0,
+            "h0": 0.89e-3,
+            "h1": 1.5e-3,
+            "h2": 18.5e-3,
+            "h3": 1e-3,
+            "w0": 2.55e-3,
+            "w1": 6.4e-3,
+            "w2": 16.4e-3
+          },
+          {
+            "SOpos": 340.0,
+            "Spos": 340.0,
+            "h0": 0.89e-3,
+            "h1": 1.5e-3,
+            "h2": 18.5e-3,
+            "h3": 1e-3,
+            "w0": 2.55e-3,
+            "w1": 6.4e-3,
+            "w2": 16.4e-3
+          }
+        ]
+      },
+      "material" : {
+        "name" : "stator_steel_M800_65A",
+        "BHcurve" : [
+          {"B" : 0.0, "H" : 0.0},
+          {"B" : 0.1, "H" : 74.7},
+          {"B" : 0.2, "H" : 97.5},
+          {"B" : 0.3, "H" : 110},
+          {"B" : 0.4, "H" : 120},
+          {"B" : 0.5, "H" : 130},
+          {"B" : 0.6, "H" : 140},
+          {"B" : 0.7, "H" : 150},
+          {"B" : 0.8, "H" : 162},
+          {"B" : 0.9, "H" : 175},
+          {"B" : 1.0, "H" : 190},
+          {"B" : 1.1, "H" : 208},
+          {"B" : 1.2, "H" : 227},
+          {"B" : 1.3, "H" : 265},
+          {"B" : 1.4, "H" : 366},
+          {"B" : 1.5, "H" : 633},
+          {"B" : 1.6, "H" : 1490},
+          {"B" : 1.7, "H" : 3670},
+          {"B" : 1.8, "H" : 7420},
+          {"B" : 1.9, "H" : 13000},
+          {"B" : 2.0, "H" : 21000},
+          {"B" : 2.1, "H" : 34000},
+          {"B" : 2.2, "H" : 55000},
+          {"B" : 2.3, "H" : 88000},
+          {"B" : 2.4, "H" : 140000},
+          {"B" : 2.5, "H" : 220000},
+          {"B" : 2.6, "H" : 349000},
+          {"B" : 2.7, "H" : 550000},
+          {"B" : 2.8, "H" : 860000},
+          {"B" : 2.9, "H" : 1350000},
+          {"B" : 3.0, "H" : 2200000},
+          {"B" : 4.0, "H" : 60000000}
+        ],
+        "resistivity" : 1e-4
+      },
+      "winding" : {
+        "material" : {
+          "name" : "copper",
+          "BHcurve" : null,
+          "resistivity" : 1.724e-8
+        },
+        "Layers" : 2,
+        "LayersType" : "sidebyside",
+        "type" : "concentrated",
+        "Conn" : "wye",
+        "NoPhases" : 3,
+        "Cseries" : 1,
+        "Cparallel" : 3,
+        "Cturns" : 22,
+        "wih" : 1,
+        "condDiam" : 1.52e-3,
+        "Cpitch" : 1,
+        "CM" : {
+          "CM1" : [
+            {"A" : 0, "B" : 1, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : 0, "C" : 1, "D" : null, "E" : null, "F" : null },
+            {"A" : 1, "B" : 0, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : 1, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : 0, "C" : 1, "D" : null, "E" : null, "F" : null },
+            {"A" : 1, "B" : 0, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : 1, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : 0, "C" : 1, "D" : null, "E" : null, "F" : null },
+            {"A" : 1, "B" : 0, "C" : 0, "D" : null, "E" : null, "F" : null }
+          ],
+          "CM2" : [
+            {"A" : -1, "B" : 0, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : -1, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : 0, "C" : -1, "D" : null, "E" : null, "F" : null },
+            {"A" : -1, "B" : 0, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : -1, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : 0, "C" : -1, "D" : null, "E" : null, "F" : null },
+            {"A" : -1, "B" : 0, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : -1, "C" : 0, "D" : null, "E" : null, "F" : null },
+            {"A" : 0, "B" : 0, "C" : -1, "D" : null, "E" : null, "F" : null }
+          ]
+        }
+      }
+    },
+    "rotor" : {
+      "type" : "spm0",
+      "oRr" : 15.2e-3,
+      "iRr" : 6e-3,
+      "pp" : 3,
+      "Rl" : 36.5e-3,
+      "magnets" : {
+        "type" : "arc",
+        "magnetisation" : "parallel",
+        "material" : {
+          "name" : "NdFeB32",
+          "BHcurve" : null,
+          "resistivity" : 1e-6,
+          "Br" : 1.21,
+          "mur" : 1.071
+        },
+        "dimension" : [
+          {
+            "Ml" : 2.98e-3,
+            "Mw" : 13.6e-3,
+            "Mps" : 1.0,
+            "iMr" : 15.2e-3,
+            "delta" : 0
+          },
+          {
+            "Ml" : 2.98e-3,
+            "Mw" : 13.6e-3,
+            "Mps" : 1.0,
+            "iMr" : 15.2e-3,
+            "delta" : 0
+          },
+          {
+            "Ml" : 2.98e-3,
+            "Mw" : 13.6e-3,
+            "Mps" : 1.0,
+            "iMr" : 15.2e-3,
+            "delta" : 0
+          },
+          {
+            "Ml" : 2.98e-3,
+            "Mw" : 13.6e-3,
+            "Mps" : 1.0,
+            "iMr" : 15.2e-3,
+            "delta" : 0
+          },
+          {
+            "Ml" : 2.98e-3,
+            "Mw" : 13.6e-3,
+            "Mps" : 1.0,
+            "iMr" : 15.2e-3,
+            "delta" : 0
+          },
+          {
+            "Ml" : 2.98e-3,
+            "Mw" : 13.6e-3,
+            "Mps" : 1.0,
+            "iMr" : 15.2e-3,
+            "delta" : 0
+          }
+        ]
+      },
+      "material" : {
+        "name" : "rotor_steel_M800_65A",
+        "BHcurve" : [
+          {"B" : 0.0, "H" : 0.0},
+          {"B" : 0.1, "H" : 74.7},
+          {"B" : 0.2, "H" : 97.5},
+          {"B" : 0.3, "H" : 110},
+          {"B" : 0.4, "H" : 120},
+          {"B" : 0.5, "H" : 130},
+          {"B" : 0.6, "H" : 140},
+          {"B" : 0.7, "H" : 150},
+          {"B" : 0.8, "H" : 162},
+          {"B" : 0.9, "H" : 175},
+          {"B" : 1.0, "H" : 190},
+          {"B" : 1.1, "H" : 208},
+          {"B" : 1.2, "H" : 227},
+          {"B" : 1.3, "H" : 265},
+          {"B" : 1.4, "H" : 366},
+          {"B" : 1.5, "H" : 633},
+          {"B" : 1.6, "H" : 1490},
+          {"B" : 1.7, "H" : 3670},
+          {"B" : 1.8, "H" : 7420},
+          {"B" : 1.9, "H" : 13000},
+          {"B" : 2.0, "H" : 21000},
+          {"B" : 2.1, "H" : 34000},
+          {"B" : 2.2, "H" : 55000},
+          {"B" : 2.3, "H" : 88000},
+          {"B" : 2.4, "H" : 140000},
+          {"B" : 2.5, "H" : 220000},
+          {"B" : 2.6, "H" : 349000},
+          {"B" : 2.7, "H" : 550000},
+          {"B" : 2.8, "H" : 860000},
+          {"B" : 2.9, "H" : 1350000},
+          {"B" : 3.0, "H" : 2200000},
+          {"B" : 4.0, "H" : 60000000}
+        ],
+        "resistivity" : 1e-4
+      },
+      "init_pos" : -30.0
+    }
+  }
+}
+\end{lstlisting}
+
 
 %----------------------------------------------------------------------------------------
 

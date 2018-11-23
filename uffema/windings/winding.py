@@ -212,3 +212,9 @@ class Winding(metaclass=ABCMeta):
 
     def get_coilside_conductor_area(self):
         return self.coilside_conductor_area
+
+    def __str__(self):
+        output = "\t\t" + self.type + "\n"
+        output = output + "\t\tWinding Phases= " + str(self.phases) + "\n"
+        output = output + "\t\tWinding Layers= " + str(self.layers) + "\n"
+        return output

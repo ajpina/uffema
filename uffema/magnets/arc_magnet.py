@@ -172,3 +172,6 @@ class ArcMagnet(Magnet):
             '703': [704, 1, 700]
         }
         return points, lines
+
+    def __str__(self):
+        return Magnet.__str__(self)
