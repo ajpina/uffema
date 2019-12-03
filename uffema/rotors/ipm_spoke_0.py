@@ -26,7 +26,7 @@ from uffema.magnets import Magnet
 from uffema.pockets import PMPocket
 
 
-class SPM0(Rotor):
+class SPOKE0(Rotor):
 
     @property
     def magnets(self):
@@ -61,7 +61,7 @@ class SPM0(Rotor):
         self._type = value
 
     def get_type(self):
-        return 'SPM0'
+        return 'SPOKE0'
 
     def __init__(self, rotor_settings):
         Rotor.__init__(self, rotor_settings, 'inner')
@@ -70,20 +70,17 @@ class SPM0(Rotor):
             self.magnets.insert(i, Magnet.create(magnet_settings, rotor_settings['magnets']['type'],
                                                  rotor_settings['magnets']['magnetisation'],
                                                  rotor_settings['magnets']['material'],'inner'))
-
         self.pockets = []
         if 'pockets' in rotor_settings:
             for i, pocket_settings in enumerate(rotor_settings['pockets']['dimension']):
-                self.pockets.insert(i, PMPocket.create(pocket_settings, rotor_settings['pockets']['type'],
-                                                       rotor_settings['magnets']['dimension'][0],
-                                                       rotor_settings['magnets']['type'] ))
+                self.pockets.insert(i, PMPocket.create(pocket_settings, rotor_settings['pockets']['type'], magnet_settings, rotor_settings['magnets']['type']))
 
         self.initial_position = rotor_settings['init_pos'] * DEG2RAD
-        self.type = self.type + 'SPM0'
+        self.type = self.type + 'SPOKE0'
 
 
     def get_shaft_geometry(self):
-        pole_pitch =  PI / self.pp
+        pole_pitch = PI / self.pp
         points = {
             '1': [0, 0, 0],
             '500': [self.inner_radius, 0, 0],
@@ -97,50 +94,59 @@ class SPM0(Rotor):
         return points, lines
 
     def get_magnet_geometry(self):
-        return self.magnets[0].get_magnet_geometry(self.pp)
+        return self.magnets[0].get_magnet_geometry()
 
     def get_core_geometry(self):
-        # Needs to be modified if more than 4 points are used by magnets
+        magnet_points, magnet_lines = self.magnets[0].get_magnet_geometry()
+        mkeys = list(magnet_points.keys())
+        #p700 = mkeys[0]
+        #p701 = mkeys[1]
+        pocket_points, pocket_lines = self.pockets[0].get_pocket_geometry(self.outer_radius)
+        pkeys0 = list(pocket_points[0].keys())
+        #p900 = pkeys0[0]
+        #p903 = pkeys0[3]
+        pkeys1 = list(pocket_points[1].keys())
+        #p905 = pkeys1[1]
         pole_pitch = PI / self.pp
         points = {
-            '502': [self.outer_radius * np.cos (-pole_pitch/2.0), self.outer_radius * np.sin(-pole_pitch/2.0), 0]
+            '502': [self.outer_radius, 0, 0],
+            '503': [self.outer_radius * np.cos (-pole_pitch/2.0), self.outer_radius * np.sin(-pole_pitch/2.0), 0]
         }
         lines = {
-            '503': [500, 700],
-            '-703': [0],
-            '504': [704, 1, 502],
-            '505': [502, 501],
+            '503': [500, 900],
+            '-902': [0],
+            '-901': [0],
+            '-702': [0],
+            '-905': [0],
+            '-904': [0],
+            '504': [902, 502],
+            '505': [502, 1, 503],
+            '506': [503, 501],
             '-501': [0]
         }
+
         return points, lines
 
     def get_pocket_geometry(self):
-        pass
+        return self.pockets[0].get_pocket_geometry(self.outer_radius)
 
     def get_rotor_airgap_geometry(self, airgap_radius):
         pole_pitch = PI / self.pp
         points = {
-            '503': [airgap_radius, 0, 0],
-            '504': [airgap_radius * np.cos(-pole_pitch / 2.0), airgap_radius * np.sin(-pole_pitch / 2.0), 0]
+            '504': [airgap_radius, 0, 0],
+            '505': [airgap_radius * np.cos(-pole_pitch / 2.0), airgap_radius * np.sin(-pole_pitch / 2.0), 0]
         }
         lines = {
-            '506': [701, 503],
-            '507': [503, 1, 504],
-            '508': [504, 502],
-            '-504': [0],
-            '-702': [0],
-            '-701': [0]
+            '507': [502, 504],
+            '508': [504, 1, 505],
+            '509': [505, 503],
+            '-505': [0]
         }
         return points, lines
 
 
     def get_master_boundary(self):
-        return [508, 505, 502]
+        return [509, 506, 502]
 
     def get_sliding_boundary(self):
-        return [507]
-
-    def __str__(self):
-        output = "\t\tPole Pairs= " + str(self.pp) + "\n"
-        output = output + self.magnets[0].__str__()
-        return Rotor.__str__(self) + output
+        return [508]

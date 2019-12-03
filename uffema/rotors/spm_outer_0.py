@@ -26,7 +26,7 @@ from uffema.magnets import Magnet
 from uffema.pockets import PMPocket
 
 
-class SPM0(Rotor):
+class SPMOuter0(Rotor):
 
     @property
     def magnets(self):
@@ -64,12 +64,12 @@ class SPM0(Rotor):
         return 'SPM0'
 
     def __init__(self, rotor_settings):
-        Rotor.__init__(self, rotor_settings, 'inner')
+        Rotor.__init__(self, rotor_settings, 'outer')
         self.magnets = []
         for i, magnet_settings in enumerate(rotor_settings['magnets']['dimension']):
             self.magnets.insert(i, Magnet.create(magnet_settings, rotor_settings['magnets']['type'],
                                                  rotor_settings['magnets']['magnetisation'],
-                                                 rotor_settings['magnets']['material'],'inner'))
+                                                 rotor_settings['magnets']['material'], 'outer'))
 
         self.pockets = []
         if 'pockets' in rotor_settings:
@@ -79,22 +79,11 @@ class SPM0(Rotor):
                                                        rotor_settings['magnets']['type'] ))
 
         self.initial_position = rotor_settings['init_pos'] * DEG2RAD
-        self.type = self.type + 'SPM0'
+        self.type = self.type + 'SPMOuter0'
 
 
     def get_shaft_geometry(self):
-        pole_pitch =  PI / self.pp
-        points = {
-            '1': [0, 0, 0],
-            '500': [self.inner_radius, 0, 0],
-            '501': [self.inner_radius * np.cos (-pole_pitch/2.0), self.inner_radius * np.sin(-pole_pitch/2.0), 0]
-        }
-        lines = {
-            '500': [1, 500],
-            '501': [500, 1, 501],
-            '502': [501, 1]
-        }
-        return points, lines
+        pass
 
     def get_magnet_geometry(self):
         return self.magnets[0].get_magnet_geometry(self.pp)
@@ -103,14 +92,16 @@ class SPM0(Rotor):
         # Needs to be modified if more than 4 points are used by magnets
         pole_pitch = PI / self.pp
         points = {
+            '500': [self.outer_radius, 0, 0],
+            '501': [self.inner_radius * np.cos(-pole_pitch / 2.0), self.inner_radius * np.sin(-pole_pitch / 2.0), 0],
             '502': [self.outer_radius * np.cos (-pole_pitch/2.0), self.outer_radius * np.sin(-pole_pitch/2.0), 0]
         }
         lines = {
-            '503': [500, 700],
+            '500': [500, 700],
             '-703': [0],
-            '504': [704, 1, 502],
-            '505': [502, 501],
-            '-501': [0]
+            '501': [704, 1, 501],
+            '502': [501, 502],
+            '503': [502, 1, 500]
         }
         return points, lines
 
@@ -124,21 +115,23 @@ class SPM0(Rotor):
             '504': [airgap_radius * np.cos(-pole_pitch / 2.0), airgap_radius * np.sin(-pole_pitch / 2.0), 0]
         }
         lines = {
-            '506': [701, 503],
-            '507': [503, 1, 504],
-            '508': [504, 502],
-            '-504': [0],
+            '504': [701, 503],
+            '505': [503, 1, 504],
+            '506': [504, 501],
+            '-501': [0],
             '-702': [0],
             '-701': [0]
         }
         return points, lines
 
+    def get_outer_rotor_boundary(self):
+        return [503]
 
     def get_master_boundary(self):
-        return [508, 505, 502]
+        return [506, 502]
 
     def get_sliding_boundary(self):
-        return [507]
+        return [505]
 
     def __str__(self):
         output = "\t\tPole Pairs= " + str(self.pp) + "\n"

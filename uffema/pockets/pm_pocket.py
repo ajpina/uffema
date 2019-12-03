@@ -46,6 +46,9 @@ class PMPocket(metaclass=ABCMeta):
         elif pocket_type == 'v':
             from uffema.pockets import PMVPocket
             pocket_instance = PMVPocket(pockets_settings, magnet_settings, magnet_type)
+        elif pocket_type == 'spoke':
+            from uffema.pockets import PMSpoke0Pocket
+            pocket_instance = PMSpoke0Pocket(pockets_settings, magnet_settings, magnet_type)
         else:
             from uffema.pockets import PMUPocket
             pocket_instance = PMUPocket(pockets_settings, magnet_settings, magnet_type)

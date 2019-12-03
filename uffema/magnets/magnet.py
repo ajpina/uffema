@@ -44,6 +44,14 @@ class Magnet(metaclass=ABCMeta):
         self._magnetisation = value
 
     @property
+    def mode(self):
+        return self._mode
+
+    @mode.setter
+    def mode(self, value):
+        self._mode = value
+
+    @property
     @abstractmethod
     def type(self):
         return 'Should never see this'
@@ -56,19 +64,23 @@ class Magnet(metaclass=ABCMeta):
     def get_type(self):
         return 'Magnet'
 
-    def __init__(self, magnets_settings, magnetisation, material_settings):
+    def __init__(self, magnets_settings, magnetisation, material_settings, mode):
         self.material = Material.create(material_settings)
         self.magnetisation = magnetisation
+        self.mode = mode
         self.type = 'Magnet::'
 
     @staticmethod
-    def create(magnets_settings, magnet_type='arc', magnetisation='paralell', material_settings=None ):
+    def create(magnets_settings, magnet_type='arc', magnetisation='paralell', material_settings=None, mode='inner'):
         if magnet_type == 'arc':
             from uffema.magnets import ArcMagnet
-            magnet_instance = ArcMagnet(magnets_settings, magnetisation, material_settings)
+            magnet_instance = ArcMagnet(magnets_settings, magnetisation, material_settings, mode)
         elif magnet_type == 'rectangular':
             from uffema.magnets import RectangularMagnet
-            magnet_instance = RectangularMagnet(magnets_settings, magnetisation, material_settings)
+            magnet_instance = RectangularMagnet(magnets_settings, magnetisation, material_settings, mode)
+        elif magnet_type == 'spoke':
+            from uffema.magnets import RectangularSpokeMagnet
+            magnet_instance = RectangularSpokeMagnet(magnets_settings, magnetisation, material_settings)
         elif magnet_type == 'breadloaf':
             from uffema.magnets import BreadLoafMagnet
             magnet_instance = BreadLoafMagnet(magnets_settings, magnetisation, material_settings)

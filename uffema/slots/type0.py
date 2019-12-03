@@ -123,6 +123,14 @@ class Type0(Slot):
         self._liner_thickness = value
 
     @property
+    def orientation(self):
+        return self._orientation
+
+    @orientation.setter
+    def orientation(self, value):
+        self._orientation = value
+
+    @property
     def type(self):
         return self._type
 
@@ -130,7 +138,7 @@ class Type0(Slot):
     def type(self, value):
         self._type = value
 
-    def __init__(self, slot_settings):
+    def __init__(self, slot_settings, stator_mode):
         super(Type0, self).__init__(slot_settings)
         self.h0 = slot_settings['h0']
         self.h1 = slot_settings['h1']
@@ -144,6 +152,7 @@ class Type0(Slot):
         # It is assumed an insulation liner of 0.5mm thickness
         self.liner_thickness = 0.5e-3
         self.type = self.type + 'Type0'
+        self.orientation = stator_mode
 
     def get_slot_center(self):
         return self.h0 + self.h1 + (2.0/3.0)*self.h2
@@ -163,114 +172,210 @@ class Type0(Slot):
     def get_conductor_area_height(self):
         return self.h2
 
-    def get_coil_area_base_point(self, inner_radius):
-        return inner_radius + self.h0 + self.h1
+    def get_coil_area_base_point(self, radius):
+        if self.orientation == 'outer':
+            return radius + self.h0 + self.h1
+        else:
+            return radius - self.h0 - self.h1 - self.h2
 
-    def get_slot_opening_geometry(self, inner_radius):
-        delta_5 = np.arctan2(-self.w0/2.0,inner_radius)
-        r_5 = inner_radius
-        points = {
-            '2': [inner_radius, 0, 0],
-            '3': [inner_radius + self.h0, 0, 0],
-            '4': [inner_radius + self.h0, -self.w0/2.0, 0],
-            '5': [r_5*np.cos(delta_5), r_5*np.sin(delta_5) , 0]
-        }
-        lines = {
-            '1': [2, 3],
-            '2': [3, 4],
-            '3': [4, 5],
-            '4': [5, 2]
-        }
+    def get_slot_opening_geometry(self, radius):
+        delta_5 = np.arctan2(-self.w0 / 2.0, radius)
+        r_5 = radius
+        if self.orientation == 'outer':
+            points = {
+                '2': [radius, 0, 0],
+                '3': [radius + self.h0, 0, 0],
+                '4': [radius + self.h0, -self.w0/2.0, 0],
+                '5': [r_5*np.cos(delta_5), r_5*np.sin(delta_5) , 0]
+            }
+            lines = {
+                '1': [2, 3],
+                '2': [3, 4],
+                '3': [4, 5],
+                '4': [5, 2]
+            }
+        else:
+            points = {
+                '2': [radius, 0, 0],
+                '3': [radius - self.h0, 0, 0],
+                '4': [radius - self.h0, -self.w0 / 2.0, 0],
+                '5': [r_5 * np.cos(delta_5), r_5 * np.sin(delta_5), 0]
+            }
+            lines = {
+                '1': [2, 3],
+                '2': [3, 4],
+                '3': [4, 5],
+                '4': [5, 2]
+            }
         return points, lines
 
 
-    def get_slot_wedge_geometry(self, inner_radius):
-        points = {
-            '6': [inner_radius + self.h0 + self.h1, 0, 0],
-            '7': [inner_radius + self.h0 + self.h1, -self.w1/2, 0]
-        }
-        lines = {
-            '5': [3, 6],
-            '6': [6, 7],
-            '7': [7, 4],
-            '-2': [0]
-        }
+    def get_slot_wedge_geometry(self, radius):
+        if self.orientation == 'outer':
+            points = {
+                '6': [radius + self.h0 + self.h1, 0, 0],
+                '7': [radius + self.h0 + self.h1, -self.w1/2, 0]
+            }
+            lines = {
+                '5': [3, 6],
+                '6': [6, 7],
+                '7': [7, 4],
+                '-2': [0]
+            }
+        else:
+            points = {
+                '6': [radius - self.h0 - self.h1, 0, 0],
+                '7': [radius - self.h0 - self.h1, -self.w1 / 2, 0]
+            }
+            lines = {
+                '5': [3, 6],
+                '6': [6, 7],
+                '7': [7, 4],
+                '-2': [0]
+            }
+
         return points, lines
 
-    def get_coil_area_geometry(self, inner_radius):
-        points = {
-            '8': [inner_radius + self.h0 + self.h1 + self.h2 + self.h3, 0, 0],
-            '9': [inner_radius + self.h0 + self.h1 + self.h2, -self.w2 / 2, 0]
-        }
-        lines = {
-            '8': [6, 8],
-            '-9': [0],
-            '-10': [0],
-            '-6': [0]
-        }
+    def get_coil_area_geometry(self, radius):
+        if self.orientation == 'outer':
+            points = {
+                '8': [radius + self.h0 + self.h1 + self.h2 + self.h3, 0, 0],
+                '9': [radius + self.h0 + self.h1 + self.h2, -self.w2 / 2, 0]
+            }
+            lines = {
+                '8': [6, 8],
+                '-9': [0],
+                '-10': [0],
+                '-6': [0]
+            }
+        else:
+            points = {
+                '8': [radius - self.h0 - self.h1 - self.h2 - self.h3, 0, 0],
+                '9': [radius - self.h0 - self.h1 - self.h2, -self.w2 / 2, 0]
+            }
+            lines = {
+                '8': [6, 8],
+                '-9': [0],
+                '-10': [0],
+                '-6': [0]
+            }
         return points, lines
 
     def get_backiron_geometry(self, inner_radius, outer_radius, slot_number):
         slot_pitch = 360 * DEG2RAD / slot_number
-        points = {
-            '8': [inner_radius + self.h0 + self.h1 + self.h2 + self.h3, 0, 0],
-            '9': [inner_radius + self.h0 + self.h1 + self.h2, -self.w2 / 2, 0],
-            '10': [outer_radius, 0, 0],
-            '11': [outer_radius * np.cos( -slot_pitch/2.0 ), outer_radius * np.sin( -slot_pitch/2.0 ), 0],
-            '12': [(inner_radius + self.h0 + self.h1 + self.h2) * np.cos( -slot_pitch/2.0 ),
-                   (inner_radius + self.h0 + self.h1 + self.h2) * np.sin( -slot_pitch/2.0 ) , 0]
-        }
-        lines = {
-            '9': [9, 8],
-            '11': [8, 10],
-            '12': [10, 1, 11],
-            '13': [11, 12],
-            '14': [12, 9]
-        }
+        if self.orientation == 'outer':
+            points = {
+                '8': [inner_radius + self.h0 + self.h1 + self.h2 + self.h3, 0, 0],
+                '9': [inner_radius + self.h0 + self.h1 + self.h2, -self.w2 / 2, 0],
+                '10': [outer_radius, 0, 0],
+                '11': [outer_radius * np.cos( -slot_pitch/2.0 ), outer_radius * np.sin( -slot_pitch/2.0 ), 0],
+                '12': [(inner_radius + self.h0 + self.h1 + self.h2) * np.cos( -slot_pitch/2.0 ),
+                       (inner_radius + self.h0 + self.h1 + self.h2) * np.sin( -slot_pitch/2.0 ) , 0]
+            }
+            lines = {
+                '9': [9, 8],
+                '11': [8, 10],
+                '12': [10, 1, 11],
+                '13': [11, 12],
+                '14': [12, 9]
+            }
+        else:
+            points = {
+                '8': [outer_radius - self.h0 - self.h1 - self.h2 - self.h3, 0, 0],
+                '9': [outer_radius - self.h0 - self.h1 - self.h2, -self.w2 / 2, 0],
+                '10': [inner_radius, 0, 0],
+                '11': [inner_radius * np.cos(-slot_pitch / 2.0), inner_radius * np.sin(-slot_pitch / 2.0), 0],
+                '12': [(outer_radius - self.h0 - self.h1 - self.h2) * np.cos(-slot_pitch / 2.0),
+                       (outer_radius - self.h0 - self.h1 - self.h2) * np.sin(-slot_pitch / 2.0), 0]
+            }
+            lines = {
+                '9': [9, 8],
+                '11': [8, 10],
+                '12': [10, 1, 11],
+                '13': [11, 12],
+                '14': [12, 9]
+            }
         return points, lines
 
-    def get_tooth_geometry(self, inner_radius, slot_number):
+    def get_tooth_geometry(self, radius, slot_number):
         slot_pitch = 360 * DEG2RAD / slot_number
-        points = {
-            '13': [(inner_radius + self.h0 + self.h1) * np.cos( -slot_pitch/2.0 ),
-                   (inner_radius + self.h0 + self.h1) * np.sin( -slot_pitch/2.0 ) , 0]
-        }
-        lines = {
-            '15': [12, 13],
-            '16': [13, 7],
-            '10': [7, 9],
-            '-14': [0]
-        }
+        if self.orientation == 'outer':
+            points = {
+                '13': [(radius + self.h0 + self.h1) * np.cos( -slot_pitch/2.0 ),
+                       (radius + self.h0 + self.h1) * np.sin( -slot_pitch/2.0 ) , 0]
+            }
+            lines = {
+                '15': [12, 13],
+                '16': [13, 7],
+                '10': [7, 9],
+                '-14': [0]
+            }
+        else:
+            points = {
+                '13': [(radius - self.h0 - self.h1) * np.cos(-slot_pitch / 2.0),
+                       (radius - self.h0 - self.h1) * np.sin(-slot_pitch / 2.0), 0]
+            }
+            lines = {
+                '15': [12, 13],
+                '16': [13, 7],
+                '10': [7, 9],
+                '-14': [0]
+            }
         return points, lines
 
-    def get_toothtip_geometry(self, inner_radius, slot_number):
+    def get_toothtip_geometry(self, radius, slot_number):
         slot_pitch = 360 * DEG2RAD / slot_number
-        points = {
-            '14': [inner_radius * np.cos( -slot_pitch/2.0 ), inner_radius * np.sin( -slot_pitch/2.0 ) , 0]
-        }
-        lines = {
-            '17': [13, 14],
-            '18': [14, 1, 5],
-            '-3': [0],
-            '-7': [0],
-            '-16': [0]
-        }
+        if self.orientation == 'outer':
+            points = {
+                '14': [radius * np.cos( -slot_pitch/2.0 ), radius * np.sin( -slot_pitch/2.0 ) , 0]
+            }
+            lines = {
+                '17': [13, 14],
+                '18': [14, 1, 5],
+                '-3': [0],
+                '-7': [0],
+                '-16': [0]
+            }
+        else:
+            points = {
+                '14': [radius * np.cos(-slot_pitch / 2.0), radius * np.sin(-slot_pitch / 2.0), 0]
+            }
+            lines = {
+                '17': [13, 14],
+                '18': [14, 1, 5],
+                '-3': [0],
+                '-7': [0],
+                '-16': [0]
+            }
         return points, lines
 
 
     def get_stator_airgap_geometry(self, airgap_radius, slot_number):
         slot_pitch = 360 * DEG2RAD / slot_number
-        points = {
-            '15': [airgap_radius * np.cos( -slot_pitch/2.0 ), airgap_radius * np.sin( -slot_pitch/2.0 ) , 0],
-            '16': [airgap_radius, 0, 0]
-        }
-        lines = {
-            '19': [14, 15],
-            '20': [15, 1, 16],
-            '21': [16, 2],
-            '-4': [0],
-            '-18': [0]
-        }
+        if self.orientation == 'outer':
+            points = {
+                '15': [airgap_radius * np.cos( -slot_pitch/2.0 ), airgap_radius * np.sin( -slot_pitch/2.0 ) , 0],
+                '16': [airgap_radius, 0, 0]
+            }
+            lines = {
+                '19': [14, 15],
+                '20': [15, 1, 16],
+                '21': [16, 2],
+                '-4': [0],
+                '-18': [0]
+            }
+        else:
+            points = {
+                '15': [airgap_radius * np.cos(-slot_pitch / 2.0), airgap_radius * np.sin(-slot_pitch / 2.0), 0],
+                '16': [airgap_radius, 0, 0]
+            }
+            lines = {
+                '19': [14, 15],
+                '20': [15, 1, 16],
+                '21': [16, 2],
+                '-4': [0],
+                '-18': [0]
+            }
         return points, lines
 
     def get_stator_airgap_boundary(self):

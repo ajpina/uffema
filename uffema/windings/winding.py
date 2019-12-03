@@ -92,12 +92,36 @@ class Winding(metaclass=ABCMeta):
         self._wires_in_hand = value
 
     @property
+    def conductor_type(self):
+        return self._conductor_type
+
+    @conductor_type.setter
+    def conductor_type(self, value):
+        self._conductor_type = value
+
+    @property
     def conductor_diameter(self):
         return self._conductor_diameter
 
     @conductor_diameter.setter
     def conductor_diameter(self, value):
         self._conductor_diameter = value
+
+    @property
+    def conductor_height(self):
+        return self._conductor_height
+
+    @conductor_height.setter
+    def conductor_height(self, value):
+        self._conductor_height = value
+
+    @property
+    def conductor_width(self):
+        return self._conductor_width
+
+    @conductor_width.setter
+    def conductor_width(self, value):
+        self._conductor_width = value
 
     @property
     def coil_pitch(self):
@@ -165,11 +189,16 @@ class Winding(metaclass=ABCMeta):
         self.coil_series = winding_settings['Cseries']
         self.coil_parallel = winding_settings['Cparallel']
         self.wires_in_hand = winding_settings['wih']
-        self.conductor_diameter = winding_settings['condDiam']
+        self.conductor_type = winding_settings.get('CondType','round')
+        self.conductor_diameter = winding_settings.get('CondDiam', 0.0)
+        self.conductor_height = winding_settings.get('CondHeight', 0.0)
+        self.conductor_width = winding_settings.get('CondWidth', 0.0)
         self.coil_pitch = winding_settings['Cpitch']
         self.slot_winding_length = 0
         self.end_winding_length = 0
-        self.conductors = ConductorsArea(self.layers, self.layers_type)
+        self.conductors = ConductorsArea(self.layers, self.layers_type,
+                                         self.conductor_type, self.conductor_diameter,
+                                         self.conductor_height, self.conductor_width)
         material_settings = winding_settings['material']
         self.material = Material.create(material_settings)
         self.type = 'Winding::'

@@ -73,6 +73,14 @@ class Rotor(metaclass=ABCMeta):
         self._material = value
 
     @property
+    def mode(self):
+        return self._mode
+
+    @mode.setter
+    def mode(self, value):
+        self._mode = value
+
+    @property
     @abstractmethod
     def type(self):
         return 'Should never see this'
@@ -85,12 +93,13 @@ class Rotor(metaclass=ABCMeta):
     def get_type(self):
         return 'Rotor'
 
-    def __init__(self, rotor_settings):
+    def __init__(self, rotor_settings, mode):
         self.pp = rotor_settings['pp']
         self.inner_radius = rotor_settings['iRr']
         self.outer_radius = rotor_settings['oRr']
         self.stack_length = rotor_settings['Rl']
         self.rotor_position = rotor_settings['init_pos']
+        self.mode = mode
         material_settings = rotor_settings['material']
         self.material = Material.create(material_settings)
         self.type = 'Rotor::'
@@ -104,12 +113,18 @@ class Rotor(metaclass=ABCMeta):
         elif rotor_type == 'spm1' and machine_type == 'spm':
             from uffema.rotors import SPM1
             rotor_instance = SPM1(rotor_settings)
+        elif rotor_type == 'spmouter0' and machine_type == 'spm':
+            from uffema.rotors import SPMOuter0
+            rotor_instance = SPMOuter0(rotor_settings)
         elif rotor_type == 'ipm0' and machine_type == 'ipm':
             from uffema.rotors import IPM0
             rotor_instance = IPM0(rotor_settings)
         elif rotor_type == 'ipm1' and machine_type == 'ipm':
             from uffema.rotors import IPM1
             rotor_instance = IPM1(rotor_settings)
+        elif rotor_type == 'spoke0' and machine_type == 'ipm':
+            from uffema.rotors import SPOKE0
+            rotor_instance = SPOKE0(rotor_settings)
         else:
             from uffema.rotors import PMStandardInnerRotor
             rotor_instance = PMStandardInnerRotor(rotor_settings)

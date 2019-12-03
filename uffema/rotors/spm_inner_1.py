@@ -64,12 +64,12 @@ class SPM1(Rotor):
         return 'SPM1'
 
     def __init__(self, rotor_settings):
-        super(SPM1, self).__init__(rotor_settings)
+        Rotor.__init__(self, rotor_settings, 'inner')
         self.magnets = []
         for i, magnet_settings in enumerate(rotor_settings['magnets']['dimension']):
             self.magnets.insert(i, Magnet.create(magnet_settings, rotor_settings['magnets']['type'],
                                                  rotor_settings['magnets']['magnetisation'],
-                                                 rotor_settings['magnets']['material']))
+                                                 rotor_settings['magnets']['material'],'inner'))
 
         self.pockets = []
         if 'pockets' in rotor_settings:

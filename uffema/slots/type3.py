@@ -130,7 +130,7 @@ class Type3(Slot):
     def type(self, value):
         self._type = value
 
-    def __init__(self, slot_settings):
+    def __init__(self, slot_settings, stator_mode):
         super(Type3, self).__init__(slot_settings)
         self.h0 = slot_settings['h0']
         self.h1 = slot_settings['h1']

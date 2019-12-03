@@ -64,12 +64,12 @@ class IPM1(Rotor):
         return 'IPM1'
 
     def __init__(self, rotor_settings):
-        Rotor.__init__(self, rotor_settings)
+        Rotor.__init__(self, rotor_settings, 'inner')
         self.magnets = []
         for i, magnet_settings in enumerate(rotor_settings['magnets']['dimension']):
             self.magnets.insert(i, Magnet.create(magnet_settings, rotor_settings['magnets']['type'],
                                                  rotor_settings['magnets']['magnetisation'],
-                                                 rotor_settings['magnets']['material']))
+                                                 rotor_settings['magnets']['material'],'inner'))
             self.magnets[i].add_parameters(rotor_settings)
 
         self.pockets = []

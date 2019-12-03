@@ -20,6 +20,38 @@
 
 class ConductorsArea:
     @property
+    def conductor_type(self):
+        return self._conductor_type
+
+    @conductor_type.setter
+    def conductor_type(self, value):
+        self._conductor_type = value
+
+    @property
+    def conductor_diameter(self):
+        return self._conductor_diameter
+
+    @conductor_diameter.setter
+    def conductor_diameter(self, value):
+        self._conductor_diameter = value
+
+    @property
+    def conductor_height(self):
+        return self._conductor_height
+
+    @conductor_height.setter
+    def conductor_height(self, value):
+        self._conductor_height = value
+
+    @property
+    def conductor_width(self):
+        return self._conductor_width
+
+    @conductor_width.setter
+    def conductor_width(self, value):
+        self._conductor_width = value
+
+    @property
     def type(self):
         return self._type
 
@@ -30,7 +62,7 @@ class ConductorsArea:
     def get_type(self):
         return self._type
 
-    def __init__(self, num_layers, layers_type):
+    def __init__(self, num_layers, layers_type, cond_type, cond_diam, cond_height, cond_width):
         if num_layers == 1:
             self.type = 'OneLayer'
         elif num_layers == 2:
@@ -38,8 +70,10 @@ class ConductorsArea:
                 self.type = 'DualLayer_SideBySide'
             elif layers_type == 'topbottom':
                 self.type = 'DualLayer_TopBottom'
+            elif layers_type == 'hairpin':
+                self.type = 'HairPin_2Cond'
             else:
-                self.type = 'DualLayer'
+                self.type = 'Unknown'
         elif num_layers == 3:
             self.type = 'TriLayer'
         elif num_layers == 4:
@@ -47,11 +81,22 @@ class ConductorsArea:
                 self.type = 'FourLayer_SideBySide'
             elif layers_type == 'topbottom':
                 self.type = 'FourLayer_TopBottom'
+            elif layers_type == 'hairpin':
+                self.type = 'HairPin_4Cond'
             else:
-                self.type = 'FourLayer'
-        else:
+                self.type = 'Unknown'
+        elif num_layers == 6:
             if layers_type == 'hairpin':
-                self.type = 'Hairpin'
+                self.type = 'HairPin_6Cond'
+            else:
+                self.type = 'Unknown'
+        else:
+            self.type = 'Unknown'
+
+        self.conductor_type = cond_type
+        self.conductor_diameter = cond_diam
+        self.conductor_height = cond_height
+        self.conductor_width = cond_width
 
 
 
@@ -124,6 +169,35 @@ class ConductorsArea:
             }
             geometry_list.append((points1, lines1))
             geometry_list.append((points2, lines2))
+        elif self.type == 'HairPin_2Cond':
+            center_x_cond_1 = coil_area_base_point + slot_height / 4.0
+            center_x_cond_2 = coil_area_base_point + 3 * slot_height / 4.0
+            points1 = {
+                '300': [center_x_cond_1 - self.conductor_height / 2.0, 0, 0],
+                '301': [center_x_cond_1 + self.conductor_height / 2.0, 0, 0],
+                '302': [center_x_cond_1 + self.conductor_height / 2.0, -self.conductor_width / 2.0, 0],
+                '303': [center_x_cond_1 - self.conductor_height / 2.0, -self.conductor_width / 2.0, 0]
+            }
+            lines1 = {
+                '300': [300, 301],
+                '301': [301, 302],
+                '302': [302, 303],
+                '303': [303, 300]
+            }
+            points2 = {
+                '304': [center_x_cond_2 - self.conductor_height / 2.0, 0, 0],
+                '305': [center_x_cond_2 + self.conductor_height / 2.0, 0, 0],
+                '306': [center_x_cond_2 + self.conductor_height / 2.0, -self.conductor_width / 2.0, 0],
+                '307': [center_x_cond_2 - self.conductor_height / 2.0, -self.conductor_width / 2.0, 0]
+            }
+            lines2 = {
+                '304': [304, 305],
+                '305': [305, 306],
+                '306': [306, 307],
+                '307': [307, 304]
+            }
+            geometry_list.append((points1, lines1))
+            geometry_list.append((points2, lines2))
         else:
             return None
 
@@ -156,6 +230,20 @@ class ConductorsArea:
                 else:
                     lines[key] = value
         elif self.type == 'DualLayer_TopBottom':
+            lines = {
+                '200': [int(pWedge), 300],
+                '201': [300, 301],
+                '202': [301, 304],
+                '203': [304, 305],
+                '204': [305, int(pBackIron)]
+            }
+            skip = True
+            for key, value in coil_area_lines.items():
+                if skip:
+                    skip = False
+                else:
+                    lines[key] = value
+        elif self.type == 'HairPin_2Cond':
             lines = {
                 '200': [int(pWedge), 300],
                 '201': [300, 301],

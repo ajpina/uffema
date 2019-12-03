@@ -102,6 +102,14 @@ class Stator(metaclass=ABCMeta):
         self._material = value
 
     @property
+    def mode(self):
+        return self._mode
+
+    @mode.setter
+    def mode(self, value):
+        self._mode = value
+
+    @property
     @abstractmethod
     def type(self):
         return 'Should never see this'
@@ -119,9 +127,13 @@ class Stator(metaclass=ABCMeta):
         self.inner_radius = stator_settings['iSr']
         self.outer_radius = stator_settings['oSr']
         self.stack_length = stator_settings['Sl']
+        if stator_settings['type'] == 'standardouter':
+            self.mode = 'outer'
+        else:
+            self.mode = 'inner'
         self.slots = []
         for i, slot_settings in enumerate(stator_settings['slots']['dimension']):
-            self.slots.insert(i, Slot.create(slot_settings, stator_settings['slots']['type']))
+            self.slots.insert(i, Slot.create(slot_settings, stator_settings['slots']['type'], self.mode))
         winding_settings = stator_settings['winding']
         self.winding = Winding.create(winding_settings, self.slots_number)
         self.winding.set_active_length(self.stack_length)
@@ -138,8 +150,8 @@ class Stator(metaclass=ABCMeta):
             from uffema.stators import StandardOuterStator
             stator_instance = StandardOuterStator(stator_settings)
         elif stator_type == 'standardinner':
-            from uffema.stators import StandardOuterStator
-            stator_instance = StandardOuterStator(stator_settings)
+            from uffema.stators import StandardInnerStator
+            stator_instance = StandardInnerStator(stator_settings)
         else:
             from uffema.stators import StandardOuterStator
             stator_instance = StandardOuterStator(stator_settings)

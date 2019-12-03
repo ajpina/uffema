@@ -123,8 +123,8 @@ class ArcMagnet(Magnet):
     def get_type(self):
         return 'Arc'
 
-    def __init__(self, magnets_settings, magnetisation, material_settings):
-        Magnet.__init__(self, magnets_settings, magnetisation, material_settings)
+    def __init__(self, magnets_settings, magnetisation, material_settings, mode):
+        Magnet.__init__(self, magnets_settings, magnetisation, material_settings, mode)
         self.length = magnets_settings['Ml']
         self.width = magnets_settings['Mw']
         self.pole_shaping = magnets_settings['Mps']
@@ -145,32 +145,51 @@ class ArcMagnet(Magnet):
 
 
     def get_magnet_geometry(self, pp):
+        if self.mode == 'inner':
+            beta = PI / pp
+            RM0 = self.inner_radius + self.length * self.pole_shaping
+            RM1 = self.outer_radius
+            Miaa = 2 * pp * self.inner_arc_angle
+            Moaa = 2 * pp * self.outer_arc_angle
+            a_delta = RM0 * np.sin(beta * Moaa / 2.0)
+            b_delta = RM1 - RM0 * np.cos(beta * Moaa / 2.0)
+            c_delta = np.sqrt( a_delta**2.0 + b_delta**2.0 )
+            beta_delta = np.arctan2( a_delta, b_delta)
+            alpha_delta = PI - 2 * beta_delta
+            Rps = c_delta * np.sin( beta_delta ) / np.sin( alpha_delta)
 
-        beta = PI / pp
-        RM0 = self.inner_radius + self.length * self.pole_shaping
-        RM1 = self.outer_radius
-        Miaa = 2 * pp * self.inner_arc_angle
-        Moaa = 2 * pp * self.outer_arc_angle
-        a_delta = RM0 * np.sin(beta * Moaa / 2.0)
-        b_delta = RM1 - RM0 * np.cos(beta * Moaa / 2.0)
-        c_delta = np.sqrt( a_delta**2.0 + b_delta**2.0 )
-        beta_delta = np.arctan2( a_delta, b_delta)
-        alpha_delta = PI - 2 * beta_delta
-        Rps = c_delta * np.sin( beta_delta ) / np.sin( alpha_delta)
+            points = {
+                '700': [self.inner_radius, 0, 0],
+                '701': [self.outer_radius, 0, 0],
+                '702': [RM1 - Rps, 0, 0],
+                '703': [RM0 * np.cos(-beta * Moaa / 2.0), RM0 * np.sin(-beta * Moaa / 2.0), 0],
+                '704': [self.inner_radius * np.cos(-beta * Miaa / 2.0), self.inner_radius * np.sin(-beta * Miaa / 2.0),
+                        0]
+            }
+            lines = {
+                '700': [700, 701],
+                '701': [701, 702, 703],
+                '702': [703, 704],
+                '703': [704, 1, 700]
+            }
+        else:
+            beta = self.mean_arc_angle * 2 * pp
 
-        points = {
-            '700': [self.inner_radius, 0, 0],
-            '701': [self.outer_radius, 0, 0],
-            '702': [RM1 - Rps, 0, 0],
-            '703': [RM0 * np.cos(-beta * Moaa / 2.0), RM0 * np.sin(-beta * Moaa / 2.0), 0],
-            '704': [self.inner_radius * np.cos(-beta * Miaa / 2.0), self.inner_radius * np.sin(-beta * Miaa / 2.0), 0]
-        }
-        lines = {
-            '700': [700, 701],
-            '701': [701, 702, 703],
-            '702': [703, 704],
-            '703': [704, 1, 700]
-        }
+            points = {
+                '1': [0, 0, 0],
+                '700': [self.outer_radius, 0, 0],
+                '701': [self.inner_radius, 0, 0],
+                '702': [0, 0, 0],
+                '703': [self.inner_radius * np.cos(-beta / 2.0), self.inner_radius * np.sin(-beta / 2.0), 0],
+                '704': [self.outer_radius * np.cos(-beta / 2.0), self.outer_radius * np.sin(-beta / 2.0), 0]
+            }
+            lines = {
+                '700': [700, 701],
+                '701': [701, 1, 703],
+                '702': [703, 704],
+                '703': [704, 1, 700]
+            }
+
         return points, lines
 
     def __str__(self):

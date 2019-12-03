@@ -22,7 +22,7 @@ __author__ = 'ajpina'
 from uffema.magnets import Magnet
 
 
-class RectangularMagnet(Magnet):
+class RectangularSpokeMagnet(Magnet):
     @property
     def length(self):
         return self._length
@@ -64,24 +64,24 @@ class RectangularMagnet(Magnet):
         self._magnets_per_pole = value
 
     def get_type(self):
-        return 'Rectangular'
+        return 'RectangularSpoke'
 
-    def __init__(self, magnets_settings, magnetisation, material, mode):
-        Magnet.__init__(self, magnets_settings, "parallel", material, mode)
+    def __init__(self, magnets_settings, magnetisation, material):
+        Magnet.__init__(self, magnets_settings, "perpendicular", material)
         self.length = magnets_settings['Ml']
         self.width = magnets_settings['Mw']
         self.magnet_radius = magnets_settings['Mr']
         self.magnets_per_pole = 1
-        self.mag_angle = [0]
-        self.type = self.type + 'Rectangular'
+        self.mag_angle = [90]
+        self.type = self.type + 'RectangularSpoke'
 
     def get_magnet_geometry(self):
 
         points = {
-            '700': [self.magnet_radius - 0.5*self.length, 0, 0],
-            '701': [self.magnet_radius + 0.5*self.length, 0, 0],
-            '702': [self.magnet_radius + 0.5*self.length, -0.5*self.width, 0],
-            '703': [self.magnet_radius - 0.5*self.length, -0.5*self.width, 0]
+            '700': [self.magnet_radius, 0, 0],
+            '701': [self.magnet_radius + self.length, 0, 0],
+            '702': [self.magnet_radius + self.length, -0.5*self.width, 0],
+            '703': [self.magnet_radius, -0.5*self.width, 0]
         }
         lines = {
             '700': [700, 701],

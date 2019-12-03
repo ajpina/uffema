@@ -80,7 +80,7 @@ def main(argv=None):
 
     with open(filename) as msf:
         machine_settings = json.load(msf)
-    
+
     print("Machine Initialisation..")
     rm = RotatingMachine.create(machine_settings['machine'])
     print(rm)
