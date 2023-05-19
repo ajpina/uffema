@@ -152,6 +152,9 @@ class Stator(metaclass=ABCMeta):
         elif stator_type == 'standardinner':
             from uffema.stators import StandardInnerStator
             stator_instance = StandardInnerStator(stator_settings)
+        elif stator_type == 'standardinnerlinear':
+            from uffema.stators import StandardInnerStatorLinear
+            stator_instance = StandardInnerStatorLinear(stator_settings)
         else:
             from uffema.stators import StandardOuterStator
             stator_instance = StandardOuterStator(stator_settings)

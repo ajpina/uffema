@@ -40,6 +40,14 @@ class RectangularMagnet(Magnet):
         self._width = value
 
     @property
+    def deviation(self):
+        return self._deviation
+
+    @deviation.setter
+    def deviation(self, value):
+        self._deviation = value
+
+    @property
     def type(self):
         return self._type
 
@@ -71,6 +79,7 @@ class RectangularMagnet(Magnet):
         self.length = magnets_settings['Ml']
         self.width = magnets_settings['Mw']
         self.magnet_radius = magnets_settings['Mr']
+        self.deviation = magnets_settings['delta']
         self.magnets_per_pole = 1
         self.mag_angle = [0]
         self.type = self.type + 'Rectangular'

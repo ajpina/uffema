@@ -132,6 +132,14 @@ class Winding(metaclass=ABCMeta):
         self._coil_pitch = value
 
     @property
+    def slot_fill_factor(self):
+        return self._slot_fill_factor
+
+    @slot_fill_factor.setter
+    def slot_fill_factor(self, value):
+        self._slot_fill_factor = value
+
+    @property
     def slot_winding_length(self):
         return self._slot_winding_length
 
@@ -193,6 +201,7 @@ class Winding(metaclass=ABCMeta):
         self.conductor_diameter = winding_settings.get('CondDiam', 0.0)
         self.conductor_height = winding_settings.get('CondHeight', 0.0)
         self.conductor_width = winding_settings.get('CondWidth', 0.0)
+        self.slot_fill_factor = winding_settings.get('SFFactor', 1.0)
         self.coil_pitch = winding_settings['Cpitch']
         self.slot_winding_length = 0
         self.end_winding_length = 0
@@ -225,6 +234,9 @@ class Winding(metaclass=ABCMeta):
         elif winding_type == 'distributed':
             from uffema.windings import Concentrated
             winding_instance = Concentrated(winding_settings, Ns)
+        elif winding_type == 'concentrated_coreless':
+            from uffema.windings import ConcentratedCoreless
+            winding_instance = ConcentratedCoreless(winding_settings, Ns)
         else:
             from uffema.windings import Concentrated
             winding_instance = Concentrated(winding_settings, Ns)

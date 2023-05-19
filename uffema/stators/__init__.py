@@ -22,3 +22,4 @@ __author__ = 'ajpina'
 from .stator import Stator
 from .standard_outer import StandardOuterStator
 from .standard_inner import StandardInnerStator
+from .standard_inner_linear import StandardInnerStatorLinear

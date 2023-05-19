@@ -110,6 +110,9 @@ class Rotor(metaclass=ABCMeta):
         if rotor_type == 'spm0' and machine_type == 'spm':
             from uffema.rotors import SPM0
             rotor_instance = SPM0(rotor_settings)
+        if rotor_type == 'spm0linear' and  machine_type == 'spm_linear':
+            from uffema.rotors import SPM0Linear
+            rotor_instance = SPM0Linear(rotor_settings)
         elif rotor_type == 'spm1' and machine_type == 'spm':
             from uffema.rotors import SPM1
             rotor_instance = SPM1(rotor_settings)

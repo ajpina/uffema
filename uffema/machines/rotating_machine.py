@@ -114,6 +114,9 @@ class RotatingMachine(metaclass=ABCMeta):
         elif machine_type == 'ipm':
             from uffema.machines import InteriorPermanentMagnet
             machine_instance = InteriorPermanentMagnet(machine_settings)
+        elif machine_type == 'spm_linear':
+            from uffema.machines import SurfacePermanentMagnetLinear
+            machine_instance = SurfacePermanentMagnetLinear(machine_settings)
         else:
             from uffema.machines import SurfacePermanentMagnet
             machine_instance = SurfacePermanentMagnet(machine_settings)

@@ -23,4 +23,5 @@ from .rotating_machine import RotatingMachine
 from .synchronous import Synchronous
 from .permanent_magnet import PermanentMagnet
 from .surface_permanent_magnet import SurfacePermanentMagnet
+from .surface_permanent_magnet_linear import SurfacePermanentMagnetLinear
 from .interior_permanent_magnet import InteriorPermanentMagnet
